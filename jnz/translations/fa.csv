@@ -149,3 +149,43 @@ per_week,هفتگی
 piece,عدد
 special_request,درخواست ویژه
 Days,تعداد روز
+JNZ Ration Request Workflow,گردش کار درخواست جیره
+JNZ Ration Request,درخواست جیره
+JNZ Food Request Workflow,گردش کار درخواست غذا
+JNZ Food Request,درخواست غذا
+Draft,پیش‌نویس
+Pending Support Approval,در انتظار تایید سرپرست پشتیبانی
+Pending Commercial Approval,در انتظار تایید مدیر بازرگانی
+Pending CEO Office Approval,در انتظار تایید دفتر مدیرعامل
+Pending Security Approval,در انتظار تایید حراست
+Pending Finance Approval,در انتظار تایید مدیر مالی
+Pending CEO Approval,در انتظار تایید مدیرعامل
+Approved,تایید شده
+Rejected,رد شده
+Pending Site Supervisor Approval,در انتظار تایید سرپرست کارگاه
+Pending Project Manager Approval,در انتظار تایید مدیر پروژه
+Pending HR Approval,در انتظار تایید منابع انسانی
+Send to Support,ارسال به پشتیبانی
+Send to Commercial,ارسال به بازرگانی
+Send to CEO Office,ارسال به دفتر مدیرعامل
+Send to Security,ارسال به حراست
+Send to Finance,ارسال به مالی
+Send to CEO,ارسال به مدیرعامل
+Final Approve and Submit,تایید نهایی و ثبت
+Reject,رد کردن
+Send to Site Supervisor,ارسال به سرپرست کارگاه
+Send to Project Manager,ارسال به مدیر پروژه
+Send to HR,ارسال به منابع انسانی
+JNZ_ROLE_Support_Supervisor,سرپرست پشتیبانی
+JNZ_ROLE_Commercial_Manager,مدیر بازرگانی
+JNZ_ROLE__CEO_Office,دفتر مدیرعامل
+JNZ_ROLE__Security_Department,دپارتمان حراست
+JNZ_ROLE_Finance_Manager,مدیر مالی
+JNZ_ROLE_CEO,مدیرعامل
+JNZ_ROLE_Site_Supervisor,سرپرست کارگاه
+JNZ_ROLE__Project_Manager,مدیر پروژه
+JNZ_ROLE__HR,منابع انسانی
+System Manager,مدیر سیستم
+All,همه
+Open,باز
+Are you sure you want to {0}?,{0}؛      آیا اطمینان دارید؟

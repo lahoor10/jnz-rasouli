@@ -25,8 +25,7 @@ after_migrate = [
 	"jnz.module_def_setup.ensure_number_cards",
 	"jnz.module_def_setup.ensure_dashboard_charts",
 	"jnz.module_def_setup.ensure_jnz_workspace",
-	"jnz.scripts.create_workflow.make_food_request_workflow"
-]
+#	"jnz.scripts.create_workflow.run",
 ]
 
 # ---------------------------------------------------------------------------
