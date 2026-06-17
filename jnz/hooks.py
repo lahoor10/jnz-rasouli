@@ -25,6 +25,8 @@ after_migrate = [
 	"jnz.module_def_setup.ensure_number_cards",
 	"jnz.module_def_setup.ensure_dashboard_charts",
 	"jnz.module_def_setup.ensure_jnz_workspace",
+	"jnz.scripts.create_workflow.make_food_request_workflow"
+]
 ]
 
 # ---------------------------------------------------------------------------
@@ -33,7 +35,8 @@ after_migrate = [
 # instead of via fixtures, which import Workspace records unreliably.
 # ---------------------------------------------------------------------------
 fixtures = [
-	{"doctype": "Desktop Icon", "filters": [["module_name", "=", "JNZ"]]},
+	{"doctype": "Desktop Icon", "filters": [["label", "=", "JNZ"]]},
+#	{"doctype": ""},
 ]
 
 # ---------------------------------------------------------------------------

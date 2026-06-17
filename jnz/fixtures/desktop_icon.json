@@ -1,20 +1,24 @@
 [
  {
-  "doctype": "Desktop Icon",
-  "name": "JNZ",
-  "label": "JNZ",
-  "module_name": "JNZ",
   "app": "jnz",
-  "link": "JNZ",
-  "type": "module",
-  "icon": "octicon octicon-briefcase",
-  "color": "#1b5e20",
-  "description": "Ration and Food Management System",
-  "category": "Modules",
+  "bg_color": null,
+  "docstatus": 0,
+  "doctype": "Desktop Icon",
   "hidden": 0,
-  "custom": 0,
-  "standard": 1,
-  "reverse": 0,
-  "idx": 1
+  "icon": "octicon octicon-briefcase",
+  "icon_image": null,
+  "icon_type": "App",
+  "label": "JNZ",
+  "link": "JNZ",
+  "link_to": "JNZ",
+  "link_type": "Workspace Sidebar",
+  "logo_url": null,
+  "modified": "2026-06-17 11:01:08.709803",
+  "name": "JNZ",
+  "parent_icon": null,
+  "restrict_removal": 0,
+  "roles": [],
+  "sidebar": "JNZ",
+  "standard": 1
  }
 ]

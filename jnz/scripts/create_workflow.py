@@ -1,114 +1,166 @@
 import frappe
 
+def make_food_request_workflow():
+    workflow_name = "JNZ Food Request Workflow"
+    doctype_name = "JNZ Food Request"
 
-WORKFLOW_NAME = "JNZ Food Request Approval Workflow"
-DOCTYPE = "JNZ Food Request"
+    # ۱. اگر ورک‌فلو از قبل وجود دارد، آن را حذف می‌کنیم تا تغییرات جدید جایگزین شوند
+    if frappe.db.exists("Workflow", workflow_name):
+        frappe.delete_doc("Workflow", workflow_name, ignore_permissions=True)
+        frappe.db.commit()
 
+    # ۲. تعریف وضعیت‌ها (States) - با قابلیت ویرایش انحصاری برای رول مربوطه در هر مرحله
+    states = [
+        {
+            "state": "Draft",
+            "status": "Draft",
+            "doc_status": "0",
+            "allow_edit": "All Roles"
+        },
+        {
+            "state": "Pending Support Approval",
+            "status": "Open",
+            "doc_status": "0",
+            "allow_edit": "JNZ_ROLE_Support_Supervisor"
+        },
+        {
+            "state": "Pending Commercial Approval",
+            "status": "Open",
+            "doc_status": "0",
+            "allow_edit": "JNZ_ROLE_Commercial_Manager"
+        },
+        {
+            "state": "Pending CEO Office Approval",
+            "status": "Open",
+            "doc_status": "0",
+            "allow_edit": "JNZ_ROLE__CEO_Office"
+        },
+        {
+            "state": "Pending Security Approval",
+            "status": "Open",
+            "doc_status": "0",
+            "allow_edit": "JNZ_ROLE__Security_Department"
+        },
+        {
+            "state": "Pending Finance Approval",
+            "status": "Open",
+            "doc_status": "0",
+            "allow_edit": "JNZ_ROLE_Finance_Manager"
+        },
+        {
+            "state": "Pending CEO Approval",
+            "status": "Open",
+            "doc_status": "0",
+            "allow_edit": "JNZ_ROLE_CEO"
+        },
+        {
+            "state": "Approved",
+            "status": "Approved",
+            "doc_status": "1",
+            "allow_edit": ""
+        },
+        {
+            "state": "Rejected",
+            "status": "Rejected",
+            "doc_status": "0",
+            "allow_edit": ""
+        }
+    ]
 
-def ensure_workflow_state(state, docstatus=0, is_start=0, is_end=0):
-    if not frappe.db.exists("Workflow State", state):
-        frappe.get_doc({
-            "doctype": "Workflow State",
-            "workflow_state_name": state,
-            "doc_status": docstatus,
-            "is_start_state": is_start,
-            "is_end_state": is_end
-        }).insert(ignore_permissions=True)
+    # ۳. تعریف انتقال‌ها (Transitions) و اکشن‌های مربوط به هر مرحله
+    transitions = [
+        {
+            "allowed": "All Roles",
+            "state": "Draft",
+            "action": "Send to Support",
+            "next_state": "Pending Support Approval"
+        },
+        {
+            "allowed": "JNZ_ROLE_Support_Supervisor",
+            "state": "Pending Support Approval",
+            "action": "Send to Commercial",
+            "next_state": "Pending Commercial Approval"
+        },
+        {
+            "allowed": "JNZ_ROLE_Support_Supervisor",
+            "state": "Pending Support Approval",
+            "action": "Reject",
+            "next_state": "Rejected"
+        },
+        {
+            "allowed": "JNZ_ROLE_Commercial_Manager",
+            "state": "Pending Commercial Approval",
+            "action": "Send to CEO Office",
+            "next_state": "Pending CEO Office Approval"
+        },
+        {
+            "allowed": "JNZ_ROLE_Commercial_Manager",
+            "state": "Pending Commercial Approval",
+            "action": "Reject",
+            "next_state": "Rejected"
+        },
+        {
+            "allowed": "JNZ_ROLE__CEO_Office",
+            "state": "Pending CEO Office Approval",
+            "action": "Send to Security",
+            "next_state": "Pending Security Approval"
+        },
+        {
+            "allowed": "JNZ_ROLE__CEO_Office",
+            "state": "Pending CEO Office Approval",
+            "action": "Reject",
+            "next_state": "Rejected"
+        },
+        {
+            "allowed": "JNZ_ROLE__Security_Department",
+            "state": "Pending Security Approval",
+            "action": "Send to Finance",
+            "next_state": "Pending Finance Approval"
+        },
+        {
+            "allowed": "JNZ_ROLE__Security_Department",
+            "state": "Pending Security Approval",
+            "action": "Reject",
+            "next_state": "Rejected"
+        },
+        {
+            "allowed": "JNZ_ROLE_Finance_Manager",
+            "state": "Pending Finance Approval",
+            "action": "Send to CEO",
+            "next_state": "Pending CEO Approval"
+        },
+        {
+            "allowed": "JNZ_ROLE_Finance_Manager",
+            "state": "Pending Finance Approval",
+            "action": "Reject",
+            "next_state": "Rejected"
+        },
+        {
+            "allowed": "JNZ_ROLE_CEO",
+            "state": "Pending CEO Approval",
+            "action": "Final Approve and Submit",
+            "next_state": "Approved"
+        },
+        {
+            "allowed": "JNZ_ROLE_CEO",
+            "state": "Pending CEO Approval",
+            "action": "Reject",
+            "next_state": "Rejected"
+        }
+    ]
 
-
-def create_workflow():
-    # جلوگیری از دوباره‌سازی
-    if frappe.db.exists("Workflow", WORKFLOW_NAME):
-        print("Workflow already exists")
-        return
-
-    # -----------------------
-    # 1. CREATE STATES FIRST
-    # -----------------------
-    ensure_workflow_state("Draft", docstatus=0, is_start=1)
-    ensure_workflow_state("Pending Site Supervisor")
-    ensure_workflow_state("Pending Project Manager")
-    ensure_workflow_state("Pending Security")
-    ensure_workflow_state("Pending HR")
-    ensure_workflow_state("Pending CEO Office")
-    ensure_workflow_state("Pending CEO")
-    ensure_workflow_state("Approved", docstatus=1, is_end=1)
-
-    # -----------------------
-    # 2. CREATE WORKFLOW
-    # -----------------------
+    # ۴. ساخت آبجکت اصلی ورک‌فلو با فیلدهای مورد نظر
     workflow = frappe.get_doc({
         "doctype": "Workflow",
-        "workflow_name": WORKFLOW_NAME,
-        "document_type": DOCTYPE,
+        "workflow_name": workflow_name,
+        "document_type": doctype_name,
         "is_active": 1,
-        "override_status": 1,
-
-        "states": [
-            {"state": "Draft", "doc_status": 0, "is_start_state": 1},
-
-            {"state": "Pending Site Supervisor", "doc_status": 0},
-            {"state": "Pending Project Manager", "doc_status": 0},
-            {"state": "Pending Security", "doc_status": 0},
-            {"state": "Pending HR", "doc_status": 0},
-            {"state": "Pending CEO Office", "doc_status": 0},
-            {"state": "Pending CEO", "doc_status": 0},
-
-            {"state": "Approved", "doc_status": 1, "is_end_state": 1},
-        ],
-
-        "transitions": [
-            {
-                "state": "Draft",
-                "action": "Submit",
-                "next_state": "Pending Site Supervisor",
-                "allowed": "JNZ_ROLE_Site_Supervisor"
-            },
-            {
-                "state": "Pending Site Supervisor",
-                "action": "Approve",
-                "next_state": "Pending Project Manager",
-                "allowed": "JNZ_ROLE_Site_Supervisor"
-            },
-            {
-                "state": "Pending Project Manager",
-                "action": "Approve",
-                "next_state": "Pending Security",
-                "allowed": "JNZ_ROLE__Project_Manager"
-            },
-            {
-                "state": "Pending Security",
-                "action": "Approve",
-                "next_state": "Pending HR",
-                "allowed": "JNZ_ROLE__Security_Department"
-            },
-            {
-                "state": "Pending HR",
-                "action": "Approve",
-                "next_state": "Pending CEO Office",
-                "allowed": "JNZ_ROLE__HR"
-            },
-            {
-                "state": "Pending CEO Office",
-                "action": "Approve",
-                "next_state": "Pending CEO",
-                "allowed": "JNZ_ROLE__CEO_Office"
-            },
-            {
-                "state": "Pending CEO",
-                "action": "Approve",
-                "next_state": "Approved",
-                "allowed": "JNZ_ROLE_CEO"
-            },
-        ]
+        "override_status": 0,
+        "send_email_alert": 0,
+        "workflow_states": states,
+        "transitions": transitions
     })
 
+    # ۵. درج در دیتابیس و کامیت کردن تغییرات
     workflow.insert(ignore_permissions=True)
     frappe.db.commit()
-
-    print("✅ Workflow created successfully")
-
-
-# ❗ مهم: فقط وقتی مستقیم اجرا شد
-# if __name__ == "__main__":
-#     create_workflow()   
