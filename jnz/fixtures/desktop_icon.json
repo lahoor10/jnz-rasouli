@@ -1,0 +1,20 @@
+[
+ {
+  "doctype": "Desktop Icon",
+  "name": "JNZ",
+  "label": "JNZ",
+  "module_name": "JNZ",
+  "app": "jnz",
+  "link": "JNZ",
+  "type": "module",
+  "icon": "octicon octicon-briefcase",
+  "color": "#1b5e20",
+  "description": "Ration and Food Management System",
+  "category": "Modules",
+  "hidden": 0,
+  "custom": 0,
+  "standard": 1,
+  "reverse": 0,
+  "idx": 1
+ }
+]

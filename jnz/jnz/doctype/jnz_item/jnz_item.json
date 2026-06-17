@@ -1,0 +1,119 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "ITM-.#####",
+ "creation": "2026-06-15 20:10:36.480812",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "itm_name",
+  "user_define_code",
+  "itm_default_unit",
+  "active",
+  "col_break_main",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "itm_name",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Item Name",
+   "reqd": 1,
+   "translatable": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "user_define_code",
+   "fieldtype": "Data",
+   "label": "Custom Code"
+  },
+  {
+   "fieldname": "itm_default_unit",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Default Unit",
+   "options": "\ngram\nkilogram\npackage\npair\npiece\nliter",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Active"
+  },
+  {
+   "fieldname": "col_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Item Description"
+  }
+ ],
+ "links": [],
+ "modified": "2026-06-15 20:16:07.903789",
+ "modified_by": "hsz480@gmail.com",
+ "module": "JNZ",
+ "name": "JNZ Item",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "JNZ_ROLE__Project_Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "JNZ_ROLE__CEO_Office",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "JNZ_ROLE_CEO",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "JNZ_ROLE_Site_Supervisor"
+  },
+  {
+   "read": 1,
+   "role": "JNZ_ROLE__HR"
+  },
+  {
+   "read": 1,
+   "role": "JNZ_ROLE__Security_Department"
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "itm_name,user_define_code",
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "itm_name",
+ "track_changes": 1
+}

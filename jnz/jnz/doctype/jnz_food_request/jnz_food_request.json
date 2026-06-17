@@ -1,0 +1,145 @@
+{
+ "actions": [],
+ "autoname": "FREQ-.#####",
+ "creation": "2026-06-16 12:54:08.794087",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "freq_project",
+  "freq_request_date",
+  "col_break_dates",
+  "freq_start_date",
+  "freq_end_date",
+  "sec_days",
+  "freq_days",
+  "connections_tab"
+ ],
+ "fields": [
+  {
+   "fieldname": "freq_project",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Project",
+   "options": "JNZ Project",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "freq_request_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Request Date",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "col_break_dates",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "freq_start_date",
+   "fieldtype": "Date",
+   "label": "Start Date",
+   "reqd": 1
+  },
+  {
+   "description": "Auto-calculated from Project Settings if left empty",
+   "fieldname": "freq_end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "sec_days",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "freq_days",
+   "fieldtype": "Table",
+   "label": "Daily Counts",
+   "options": "JNZ Food Request Day CT"
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-06-16 18:15:15.070845",
+ "modified_by": "Administrator",
+ "module": "JNZ",
+ "name": "JNZ Food Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "JNZ_ROLE_Site_Supervisor",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "JNZ_ROLE__Project_Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "JNZ_ROLE__CEO_Office",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "JNZ_ROLE_CEO",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "JNZ_ROLE__HR"
+  },
+  {
+   "read": 1,
+   "role": "JNZ_ROLE__Security_Department"
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "freq_project",
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Orange",
+   "title": "Draft"
+  },
+  {
+   "color": "Green",
+   "title": "Submitted"
+  },
+  {
+   "color": "Red",
+   "title": "Cancelled"
+  }
+ ],
+ "title_field": "freq_project",
+ "track_changes": 1
+}

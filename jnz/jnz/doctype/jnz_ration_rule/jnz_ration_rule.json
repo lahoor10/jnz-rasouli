@@ -1,0 +1,133 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "name": "JNZ Ration Rule",
+ "module": "JNZ",
+ "naming_rule": "Expression",
+ "autoname": "RRUL-.#####",
+ "title_field": "rrul_item",
+ "show_title_field_in_link": 1,
+ "track_changes": 1,
+ "is_submittable": 0,
+ "links": [],
+ "states": [],
+ "field_order": [
+  "rrul_item",
+  "user_define_code",
+  "rrul_calc_type",
+  "rrul_amount",
+  "rrul_period",
+  "active",
+  "col_break_main",
+  "description",
+  "sec_conditions",
+  "rrul_conditions"
+ ],
+ "fields": [
+  {
+   "fieldname": "rrul_item",
+   "fieldtype": "Link",
+   "label": "Item",
+   "options": "JNZ Item",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_global_search": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "user_define_code",
+   "fieldtype": "Data",
+   "label": "Custom Code"
+  },
+  {
+   "fieldname": "rrul_calc_type",
+   "fieldtype": "Select",
+   "label": "Calculation Type",
+   "options": "\nper_person\nper_room\nper_project\nper_meeting",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "rrul_amount",
+   "fieldtype": "Float",
+   "label": "Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rrul_period",
+   "fieldtype": "Select",
+   "label": "Period",
+   "options": "\nper_request\nper_month\nper_two_month\nper_week"
+  },
+  {
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active",
+   "default": "1",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "col_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Ration Rule Description"
+  },
+  {
+   "fieldname": "sec_conditions",
+   "fieldtype": "Section Break",
+   "label": ""
+  },
+  {
+   "fieldname": "rrul_conditions",
+   "fieldtype": "Table",
+   "label": "Conditions",
+   "options": "JNZ Ration Rule Condition CT"
+  }
+ ],
+ "search_fields": "rrul_item,user_define_code",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "JNZ_ROLE__Project_Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 0
+  },
+  {
+   "role": "JNZ_ROLE__CEO_Office",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "JNZ_ROLE_CEO",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "JNZ_ROLE_Site_Supervisor",
+   "read": 1,
+   "write": 0,
+   "create": 0,
+   "delete": 0
+  }
+ ]
+}

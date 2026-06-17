@@ -1,0 +1,66 @@
+{
+  "actions": [],
+  "doctype": "DocType",
+  "name": "JNZ Ration Request Item CT",
+  "module": "JNZ",
+  "naming_rule": "Expression",
+  "autoname": "RRI-.#####",
+  "istable": 1,
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "grid_page_length": 50,
+  "index_web_pages_for_search": 1,
+  "rows_threshold_for_grid_search": 20,
+  "row_format": "Dynamic",
+  "sort_field": "creation",
+  "sort_order": "DESC",
+  "cannot_add_rows": 1,
+  "cannot_delete_rows": 1,
+  "track_changes": 0,
+  "links": [],
+  "states": [],
+  "field_order": [
+    "rri_item",
+    "rri_item_name",
+    "rri_quantity",
+    "rri_unit"
+  ],
+  "fields": [
+    {
+      "fieldname": "rri_item",
+      "fieldtype": "Link",
+      "label": "Item",
+      "options": "JNZ Item",
+      "reqd": 1,
+      "read_only": 1,
+      "no_copy": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "rri_item_name",
+      "fieldtype": "Data",
+      "label": "Item Name",
+      "fetch_from": "rri_item.itm_name",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "rri_quantity",
+      "fieldtype": "Float",
+      "label": "Requested Quantity",
+      "reqd": 1,
+      "read_only": 1,
+      "no_copy": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "rri_unit",
+      "fieldtype": "Data",
+      "label": "Unit",
+      "read_only": 1,
+      "no_copy": 1,
+      "in_list_view": 1
+    }
+  ],
+  "permissions": []
+}

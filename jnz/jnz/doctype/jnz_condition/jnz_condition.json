@@ -1,0 +1,98 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "name": "JNZ Condition",
+ "module": "JNZ",
+ "naming_rule": "Expression",
+ "autoname": "COND-.#####",
+ "title_field": "cond_type",
+ "show_title_field_in_link": 1,
+ "track_changes": 1,
+ "is_submittable": 0,
+ "links": [],
+ "states": [],
+ "field_order": [
+  "cond_type",
+  "user_define_code",
+  "active",
+  "col_break_main",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "cond_type",
+   "fieldtype": "Data",
+   "label": "Condition Type",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1,
+   "in_global_search": 1,
+   "in_standard_filter": 1,
+   "translatable": 1
+  },
+  {
+   "fieldname": "user_define_code",
+   "fieldtype": "Data",
+   "label": "Custom Code"
+  },
+  {
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active",
+   "default": "1",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "col_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Condition Description"
+  }
+ ],
+ "search_fields": "cond_type,user_define_code",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "JNZ_ROLE__Project_Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 0
+  },
+  {
+   "role": "JNZ_ROLE__CEO_Office",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "JNZ_ROLE_CEO",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "JNZ_ROLE_Site_Supervisor",
+   "read": 1,
+   "write": 0,
+   "create": 0,
+   "delete": 0
+  }
+ ]
+}

@@ -1,0 +1,41 @@
+{
+ "app": "jnz",
+ "creation": "2026-06-15 17:18:01.060450",
+ "docstatus": 0,
+ "doctype": "Workspace Sidebar",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "JNZ",
+   "link_to": "JNZ",
+   "link_type": "Workspace",
+   "open_in_new_tab": 1,
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "align-center-horizontal",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "JNZ Projects",
+   "link_to": "JNZ Project",
+   "link_type": "DocType",
+   "open_in_new_tab": 1,
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-06-16 07:58:53.345859",
+ "modified_by": "hsz480@gmail.com",
+ "module": "JNZ",
+ "name": "JNZ",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "JNZ"
+}

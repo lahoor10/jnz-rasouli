@@ -1,0 +1,161 @@
+{
+ "actions": [],
+ "autoname": "RREQ-.#####",
+ "creation": "2026-06-16 12:54:08.540876",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "rreq_project",
+  "rreq_request_date",
+  "rreq_workers_count",
+  "days",
+  "col_break_flags",
+  "rreq_has_meeting",
+  "rreq_has_lunch",
+  "sec_items",
+  "rreq_items",
+  "connections_tab"
+ ],
+ "fields": [
+  {
+   "fieldname": "rreq_project",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Project",
+   "options": "JNZ Project",
+   "reqd": 1
+  },
+  {
+   "default": "now",
+   "fieldname": "rreq_request_date",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Request Date",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "rreq_workers_count",
+   "fieldtype": "Int",
+   "label": "Workers Count",
+   "reqd": 1
+  },
+  {
+   "fieldname": "col_break_flags",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "rreq_has_meeting",
+   "fieldtype": "Check",
+   "label": "Has Meeting"
+  },
+  {
+   "default": "0",
+   "fieldname": "rreq_has_lunch",
+   "fieldtype": "Check",
+   "label": "Has Lunch"
+  },
+  {
+   "fieldname": "sec_items",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "rreq_items",
+   "fieldtype": "Table",
+   "label": "Requested Items",
+   "options": "JNZ Ration Request Item CT",
+   "read_only": 1
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  },
+  {
+   "fieldname": "days",
+   "fieldtype": "Int",
+   "label": "Days",
+   "reqd": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-06-16 18:25:35.560137",
+ "modified_by": "Administrator",
+ "module": "JNZ",
+ "name": "JNZ Ration Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "JNZ_ROLE_Site_Supervisor",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "JNZ_ROLE__Project_Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "JNZ_ROLE__CEO_Office",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "JNZ_ROLE_CEO",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "JNZ_ROLE__HR"
+  },
+  {
+   "read": 1,
+   "role": "JNZ_ROLE__Security_Department"
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "rreq_project",
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Orange",
+   "title": "Draft"
+  },
+  {
+   "color": "Green",
+   "title": "Submitted"
+  },
+  {
+   "color": "Red",
+   "title": "Cancelled"
+  }
+ ],
+ "title_field": "rreq_project",
+ "track_changes": 1
+}

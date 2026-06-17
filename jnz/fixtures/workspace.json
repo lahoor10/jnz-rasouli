@@ -1,0 +1,168 @@
+[
+ {
+  "doctype": "Workspace",
+  "name": "JNZ",
+  "label": "JNZ",
+  "title": "JNZ",
+  "type": "Workspace",
+  "module": "JNZ",
+  "is_default": 0,
+  "is_standard": 0,
+  "public": 1,
+  "icon": "assets/jnz/icons/solid/jnz.svg",
+  "color": "#1b5e20",
+  "hide_custom": 0,
+  "restrict_to_domain": "",
+  "roles": [],
+  "shortcuts": [
+   {
+    "label": "Ration Rules",
+    "type": "DocType",
+    "link_to": "JNZ Ration Rule",
+    "icon": "list",
+    "color": "#1b5e20"
+   },
+   {
+    "label": "Projects",
+    "type": "DocType",
+    "link_to": "JNZ Project",
+    "icon": "home",
+    "color": "#2e7d32"
+   },
+   {
+    "label": "Ration Request",
+    "type": "DocType",
+    "link_to": "JNZ Ration Request",
+    "icon": "receipt",
+    "color": "#388e3c"
+   },
+   {
+    "label": "Food Request",
+    "type": "DocType",
+    "link_to": "JNZ Food Request",
+    "icon": "food",
+    "color": "#43a047"
+   },
+   {
+    "label": "Items",
+    "type": "DocType",
+    "link_to": "JNZ Item",
+    "icon": "stock",
+    "color": "#ff8f00"
+   },
+   {
+    "label": "Conditions",
+    "type": "DocType",
+    "link_to": "JNZ Condition",
+    "icon": "filter",
+    "color": "#ffa000"
+   }
+  ],
+  "links": [
+   {
+    "label": "Ration Management",
+    "type": "Card Break",
+    "icon": "clipboard-list",
+    "hidden": 0
+   },
+   {
+    "label": "Ration Rules",
+    "type": "Link",
+    "link_type": "DocType",
+    "link_to": "JNZ Ration Rule",
+    "description": "Define ration items, calculation types and periods",
+    "dependencies": "",
+    "hidden": 0
+   },
+   {
+    "label": "Conditions",
+    "type": "Link",
+    "link_type": "DocType",
+    "link_to": "JNZ Condition",
+    "description": "Manage conditions that gate ration rules",
+    "hidden": 0
+   },
+   {
+    "label": "Ration Request",
+    "type": "Link",
+    "link_type": "DocType",
+    "link_to": "JNZ Ration Request",
+    "description": "Submit and view ration requests per project",
+    "hidden": 0
+   },
+   {
+    "label": "Food Management",
+    "type": "Card Break",
+    "icon": "utensils",
+    "hidden": 0
+   },
+   {
+    "label": "Food Request",
+    "type": "Link",
+    "link_type": "DocType",
+    "link_to": "JNZ Food Request",
+    "description": "Daily food counts \u2014 breakfast, lunch and dinner",
+    "hidden": 0
+   },
+   {
+    "label": "Masters",
+    "type": "Card Break",
+    "icon": "database",
+    "hidden": 0
+   },
+   {
+    "label": "Projects",
+    "type": "Link",
+    "link_type": "DocType",
+    "link_to": "JNZ Project",
+    "description": "Manage construction sites and camps",
+    "hidden": 0
+   },
+   {
+    "label": "Project Settings",
+    "type": "Link",
+    "link_type": "DocType",
+    "link_to": "JNZ Project Settings",
+    "description": "Period days and deadline settings per project",
+    "hidden": 0
+   },
+   {
+    "label": "Items",
+    "type": "Link",
+    "link_type": "DocType",
+    "link_to": "JNZ Item",
+    "description": "Ration item catalogue with default units",
+    "hidden": 0
+   }
+  ],
+  "content": "[{\"id\": \"jnz00\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Dashboard</b></span>\", \"col\": 12}}, {\"id\": \"jnz01\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"JNZ Active Projects\", \"col\": 3}}, {\"id\": \"jnz02\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"JNZ Ration Items\", \"col\": 3}}, {\"id\": \"jnz03\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"JNZ Ration Requests\", \"col\": 3}}, {\"id\": \"jnz04\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"JNZ Food Requests\", \"col\": 3}}, {\"id\": \"jnz05\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\", \"col\": 12}}, {\"id\": \"jnz06\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Ration Rules\", \"col\": 3}}, {\"id\": \"jnz07\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Projects\", \"col\": 3}}, {\"id\": \"jnz08\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Ration Request\", \"col\": 3}}, {\"id\": \"jnz09\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Food Request\", \"col\": 3}}, {\"id\": \"jnz10\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Items\", \"col\": 3}}, {\"id\": \"jnz11\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Conditions\", \"col\": 3}}, {\"id\": \"jnz12\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Modules</b></span>\", \"col\": 12}}, {\"id\": \"jnz13\", \"type\": \"card\", \"data\": {\"card_name\": \"Ration Management\", \"col\": 4}}, {\"id\": \"jnz14\", \"type\": \"card\", \"data\": {\"card_name\": \"Food Management\", \"col\": 4}}, {\"id\": \"jnz15\", \"type\": \"card\", \"data\": {\"card_name\": \"Masters\", \"col\": 4}}, {\"id\": \"jnz16\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Trends</b></span>\", \"col\": 12}}, {\"id\": \"jnz17\", \"type\": \"chart\", \"data\": {\"chart_name\": \"JNZ Ration Requests Trend\", \"col\": 12}}, {\"id\": \"jnz18\", \"type\": \"chart\", \"data\": {\"chart_name\": \"JNZ Food Requests Trend\", \"col\": 12}}]",
+  "number_cards": [
+   {
+    "number_card_name": "JNZ Active Projects",
+    "label": "Active Projects"
+   },
+   {
+    "number_card_name": "JNZ Ration Items",
+    "label": "Ration Items"
+   },
+   {
+    "number_card_name": "JNZ Ration Requests",
+    "label": "Ration Requests"
+   },
+   {
+    "number_card_name": "JNZ Food Requests",
+    "label": "Food Requests"
+   }
+  ],
+  "charts": [
+   {
+    "chart_name": "JNZ Ration Requests Trend",
+    "label": "Ration Requests Trend"
+   },
+   {
+    "chart_name": "JNZ Food Requests Trend",
+    "label": "Food Requests Trend"
+   }
+  ]
+ }
+]

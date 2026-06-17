@@ -1,0 +1,43 @@
+{
+  "actions": [],
+  "doctype": "DocType",
+  "name": "JNZ Ration Rule Condition CT",
+  "module": "JNZ",
+  "naming_rule": "Expression",
+  "autoname": "RRC-.#####",
+  "istable": 1,
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "grid_page_length": 50,
+  "index_web_pages_for_search": 1,
+  "rows_threshold_for_grid_search": 20,
+  "row_format": "Dynamic",
+  "sort_field": "creation",
+  "sort_order": "DESC",
+  "track_changes": 0,
+  "links": [],
+  "states": [],
+  "field_order": [
+    "rrc_condition",
+    "rrc_condition_type"
+  ],
+  "fields": [
+    {
+      "fieldname": "rrc_condition",
+      "fieldtype": "Link",
+      "label": "Condition",
+      "options": "JNZ Condition",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "rrc_condition_type",
+      "fieldtype": "Data",
+      "label": "Condition Type",
+      "fetch_from": "rrc_condition.cond_type",
+      "read_only": 1,
+      "in_list_view": 1
+    }
+  ],
+  "permissions": []
+}

@@ -1,0 +1,151 @@
+Actions,عملیات
+Active,فعال
+Active Projects,پروژه‌های فعال
+Amount,مقدار
+Auto-Generate End Date,تاریخ پایان خودکار
+Auto-calculated from Project Settings if left empty,در صورت خالی بودن از تنظیمات کارگاه محاسبه می‌شود
+Bleach,مایع سفیدکننده
+Breakfast Count,تعداد صبحانه
+Broken Sugar,قند خردشده
+Calculation Type,نوع محاسبه
+Cancelled,لغو شده
+Condition,شرط
+Condition Description,توضیحات شرط
+Condition Type,نوع شرط
+Conditions,شروط
+Connections,اتصالات
+Custom Code,کد سفارشی
+Daily Counts,جزئیات روزانه
+Daily food counts — breakfast and lunch and dinner,آمار روزانه غذا — صبحانه و نهار و شام
+Daily rows regenerated.,سطرهای روزانه بازسازی شدند.
+Dashboard,داشبورد
+Date,تاریخ
+Default Unit,واحد پیش‌فرض
+Define ration items and calculation types and periods,تعریف اقلام جیره و نوع محاسبه و دوره‌ها
+Dinner Count,تعداد شام
+Dishwashing Gloves,دستکش ظرفشویی
+Dishwashing Liquid,مایع ظرفشویی
+Disposable Spoon,قاشق یکبار مصرف
+Disposable Tablecloth Roll,سفره یکبار مصرف رولی
+Draft,پیش‌نویس
+Dry Tea,چای خشک
+End Date,تاریخ پایان
+End Date cannot be before Start Date.,تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد.
+End Date cleared — it was before the new Start Date.,تاریخ پایان پاک شد — قبل از تاریخ شروع جدید بود.
+Food,غذا
+Food Management,مدیریت غذا
+Food Request,درخواست غذا
+Food Requests,درخواست‌های غذا
+Food Requests Trend,روند درخواست‌های غذا
+Food Requests over time,درخواست‌های غذا در طول زمان
+Freezer Bag,نایلون فریزر
+Garbage Bag,نایلون زباله
+Glass Cleaner,مایع شیشه‌شور
+Glass Cup,لیوان شیشه‌ای
+Hand Washing Powder,پودر لباس‌شویی دستی
+Handwashing Liquid,مایع دستشویی
+Has Lunch,پذیرایی ناهار دارد؟
+Has Meeting,جلسه دارد؟
+Inactive,غیرفعال
+Item,کالا
+Item Description,توضیحات کالا
+Item Name,نام کالا
+Items,کالاها
+Items Excluded,اقلام حذف‌شده
+Items recalculated.,اقلام مجدداً محاسبه شدند.
+JNZ,جهاد نصر زنجان
+JNZ Active Projects,پروژه‌های فعال
+JNZ Condition,شرط
+JNZ Dashboard,داشبورد
+JNZ Food Request,درخواست غذا
+JNZ Food Request Day CT,روزهای درخواست غذا
+JNZ Food Requests,درخواست‌های غذا
+JNZ Food Requests Trend,روند درخواست‌های غذا
+JNZ Item,کالا
+JNZ Project,کارگاه
+JNZ Project Settings,تنظیمات کارگاه
+JNZ Ration Items,اقلام جیره‌بندی
+JNZ Ration Request,درخواست جیره
+JNZ Ration Request Item CT,اقلام درخواست جیره
+JNZ Ration Requests,درخواست‌های جیره
+JNZ Ration Requests Trend,روند درخواست‌های جیره
+JNZ Ration Rule,قانون جیره
+JNZ Ration Rule Condition CT,شرط قانون جیره
+Lunch Count,تعداد نهار
+Manage conditions that gate ration rules,مدیریت شروط کنترل‌کننده قوانین جیره
+Manage construction sites and camps,مدیریت کارگاه‌ها و اردوگاه‌های شرکت
+Masters,اطلاعات پایه
+Matchbox,کبریت
+Modules,ماژول‌ها
+No Items,بدون اقلام
+Paper Cup,لیوان کاغذی
+Per Request,هر درخواست
+Period,دوره
+Period days and deadline settings per project,تنظیمات دوره و مهلت به ازای هر کارگاه
+Periodic,دوره‌ای
+Please set a Start Date first.,ابتدا تاریخ شروع را وارد کنید.
+Project,کارگاه
+Project Alpha,پروژه آلفا
+Project Beta,پروژه بتا
+Project Description,توضیحات کارگاه
+Project Gamma,پروژه گاما
+Project Name,نام کارگاه
+Project Settings,تنظیمات کارگاه
+Project Settings Description,توضیحات تنظیمات کارگاه
+Projects,کارگاه‌ها
+Ration,جیره
+Ration Items,اقلام جیره‌بندی
+Ration Management,مدیریت جیره
+Ration Request,درخواست جیره
+Ration Requests,درخواست‌های جیره
+Ration Requests Trend,روند درخواست‌های جیره
+Ration Requests over time,درخواست‌های جیره در طول زمان
+Ration Rule Description,توضیحات قانون جیره
+Ration Rules,قوانین جیره
+Ration and Food Management System,سامانه مدیریت جیره و تغذیه
+Ration item catalogue with default units,فهرست اقلام جیره با واحدهای پیش‌فرض
+Recalculate Items,محاسبه مجدد اقلام
+Reception Biscuits,بیسکویت پذیرایی
+Reception Chocolate,شکلات پذیرایی
+Regenerate Days,بازسازی روزها
+Request Date,تاریخ درخواست
+Request Deadline (Days),مهلت درخواست (روز)
+Request Period (Days),مدت دوره درخواست (روز)
+Requested Items,اقلام درخواستی
+Requested Quantity,مقدار درخواست
+Rooms Count,تعداد اتاق
+Salt,نمک
+Save the document to refresh item quantities.,برای به‌روزرسانی مقادیر، سند را ذخیره کنید.
+Shortcuts,میان‌برها
+Sponge Scrubber,اسکاج ابری
+Start Date,تاریخ شروع
+Start Date is required.,تاریخ شروع الزامی است.
+Submit and view ration requests per project,ثبت و مشاهده درخواست‌های جیره هر کارگاه
+Submitted,ثبت شده
+The following items were excluded due to zero quantity:\n{0},اقلام زیر به دلیل مقدار صفر حذف شدند:\n{0}
+Tissue Paper,دستمال کاغذی
+Toilet Bowl Cleaner,مایع جرم‌گیر سرویس بهداشتی
+Unit,واحد
+Wire Scrubber,اسکاج سیمی
+Workers Count,تعداد پرسنل
+Workers Count cannot be negative.,تعداد پرسنل نمی‌تواند منفی باشد.
+gram,گرم
+kilogram,کیلوگرم
+liter,لیتر
+lunch,پذیرایی ناهار
+management_approval,تایید مدیریت
+meeting,جلسه
+no_lunch,بدون پذیرایی ناهار
+package,بسته
+pair,جفت
+per_meeting,به ازای هر جلسه
+per_month,ماهانه
+per_person,به ازای هر نفر
+per_project,به ازای هر کارگاه
+per_request,هر درخواست
+per_room,به ازای هر اتاق
+per_two_month,دو ماهانه
+per_week,هفتگی
+piece,عدد
+special_request,درخواست ویژه
+Days,تعداد روز
