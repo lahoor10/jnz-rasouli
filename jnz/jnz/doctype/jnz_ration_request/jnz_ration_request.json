@@ -14,7 +14,8 @@
   "rreq_has_lunch",
   "sec_items",
   "rreq_items",
-  "connections_tab"
+  "connections_tab",
+  "amended_from"
  ],
  "fields": [
   {
@@ -80,10 +81,21 @@
    "fieldtype": "Int",
    "label": "Days",
    "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "JNZ Ration Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-06-16 18:25:35.560137",
+ "modified": "2026-06-17 09:25:27.421533",
  "modified_by": "Administrator",
  "module": "JNZ",
  "name": "JNZ Ration Request",

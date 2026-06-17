@@ -40,6 +40,7 @@ class JNZRationRequest(Document):
     def before_save(self):
         if not self.rreq_request_date:
             self.rreq_request_date = now_datetime()
+        self._remove_old_drafts()
         self._calculate_items()
 
     def validate(self):
@@ -146,7 +147,7 @@ class JNZRationRequest(Document):
              WHERE rr.rreq_project = %s
                AND rri.rri_item    = %s
                AND rr.name        != %s
-               AND rr.docstatus   != 2
+               AND rr.docstatus   != 1
              ORDER BY rr.rreq_request_date DESC
              LIMIT 1
             """,
@@ -178,3 +179,27 @@ class JNZRationRequest(Document):
             return (amount * days) if self.rreq_has_meeting else None
 
         return None
+
+    def _remove_old_drafts(self):
+        """Keep only one draft per project."""
+
+        if not self.rreq_project:
+            return
+
+        old_drafts = frappe.get_all(
+            DOCTYPE_RATION_REQUEST,
+            filters={
+                "rreq_project": self.rreq_project,
+                "docstatus": 0,
+                "name": ["!=", self.name or "__new__"],
+            },
+            pluck="name",
+        )
+
+        for draft_name in old_drafts:
+            frappe.delete_doc(
+                DOCTYPE_RATION_REQUEST,
+                draft_name,
+                force=True,
+                ignore_permissions=True,
+            )
