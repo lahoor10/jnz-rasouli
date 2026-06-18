@@ -10,7 +10,14 @@
   "col_break_dates",
   "freq_start_date",
   "freq_end_date",
+  "section_break_dnco",
+  "default_breakfast",
+  "column_break_5762",
+  "default_lunch",
+  "column_break_xepn",
+  "default_dinner",
   "sec_days",
+  "update_tab",
   "freq_days",
   "connections_tab"
  ],
@@ -64,10 +71,46 @@
    "fieldtype": "Tab Break",
    "label": "Connections",
    "show_dashboard": 1
+  },
+  {
+   "description": "After edit push button to see changes",
+   "fieldname": "update_tab",
+   "fieldtype": "Button",
+   "label": "Update Table"
+  },
+  {
+   "fieldname": "default_breakfast",
+   "fieldtype": "Int",
+   "label": "default_breakfast",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_lunch",
+   "fieldtype": "Int",
+   "label": "default_lunch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_dinner",
+   "fieldtype": "Int",
+   "label": "default_dinner",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_dnco",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_5762",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_xepn",
+   "fieldtype": "Column Break"
   }
  ],
  "links": [],
- "modified": "2026-06-16 18:15:15.070845",
+ "modified": "2026-06-18 10:19:26.070378",
  "modified_by": "Administrator",
  "module": "JNZ",
  "name": "JNZ Food Request",
@@ -141,5 +184,7 @@
   }
  ],
  "title_field": "freq_project",
- "track_changes": 1
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
 }

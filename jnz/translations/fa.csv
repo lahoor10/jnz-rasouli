@@ -189,3 +189,12 @@ System Manager,مدیر سیستم
 All,همه
 Open,باز
 Are you sure you want to {0}?,{0}؛      آیا اطمینان دارید؟
+Row for date {0} cannot have negative food counts. Please enter 0 or more.,تعداد وعده‌های غذایی در تاریخ {0} نمی‌تواند منفی باشد. لطفاً عددی بزرگتر یا مساوی صفر وارد کنید.
+Start Date cannot be before today.,تاریخ شروع درخواست نمی‌تواند قبل از امروز باشد.
+The selected date range overlaps with an existing request: {0},بازه زمانی انتخاب شده با درخواست موجود تداخل دارد: {0}
+The selected date range overlaps with an existing request. The date is from {0} to {1} in request {2}.,بازه زمانی انتخاب شده با درخواست موجود تداخل دارد. تاریخ درخواست {2}  از {0} تا {1} می‌باشد.
+After edit push button to see changes,بعد از ایجاد تغییرات برای اعمال دکمه را بفشارید
+default_breakfast,صبحانه پیش‌فرض
+default_lunch,ناهار پیش‌فرض
+default_dinner,شام پیش‌فرض
+Update Table,به‌روزرسانی جدول

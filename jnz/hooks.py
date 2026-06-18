@@ -42,3 +42,9 @@ fixtures = [
 # Translations — Frappe auto-discovers the translations/ folder  (§9).
 # File: jnz/translations/fa.csv
 # ---------------------------------------------------------------------------
+
+scheduler_events = {
+    "daily": [
+        "jnz.tasks.food_request_reminders.check_missing_food_requests"
+    ]
+}
