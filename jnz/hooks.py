@@ -48,3 +48,11 @@ scheduler_events = {
         "jnz.tasks.food_request_reminders.check_missing_food_requests"
     ]
 }
+
+# jnz/jnz/hooks.py
+
+permission_query_conditions = {
+    "JNZ Project": "jnz.permissions.get_project_query_conditions",
+    "JNZ Ration Request": "jnz.permissions.get_ration_request_query_conditions",
+    "JNZ Food Request": "jnz.permissions.get_food_request_query_conditions",
+}

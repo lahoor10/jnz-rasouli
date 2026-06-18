@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class JNZProjectMembers(Document):
+class JNZProjectMembersCT(Document):
 	pass
