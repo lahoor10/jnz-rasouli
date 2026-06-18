@@ -3,7 +3,7 @@ Active,فعال
 Active Projects,پروژه‌های فعال
 Amount,مقدار
 Auto-Generate End Date,تاریخ پایان خودکار
-Auto-calculated from Project Settings if left empty,در صورت خالی بودن از تنظیمات کارگاه محاسبه می‌شود
+Auto-Fill from Project Settings if left empty,در صورت خالی بودن از تنظیمات کارگاه محاسبه می‌شود
 Bleach,مایع سفیدکننده
 Breakfast Count,تعداد صبحانه
 Broken Sugar,قند خردشده
@@ -193,8 +193,23 @@ Row for date {0} cannot have negative food counts. Please enter 0 or more.,تع�
 Start Date cannot be before today.,تاریخ شروع درخواست نمی‌تواند قبل از امروز باشد.
 The selected date range overlaps with an existing request: {0},بازه زمانی انتخاب شده با درخواست موجود تداخل دارد: {0}
 The selected date range overlaps with an existing request. The date is from {0} to {1} in request {2}.,بازه زمانی انتخاب شده با درخواست موجود تداخل دارد. تاریخ درخواست {2}  از {0} تا {1} می‌باشد.
-After edit push button to see changes,بعد از ایجاد تغییرات برای اعمال دکمه را بفشارید
+Fill Table with defaults,پرکردن جدول با مقادیر پیش فرض
 default_breakfast,صبحانه پیش‌فرض
 default_lunch,ناهار پیش‌فرض
 default_dinner,شام پیش‌فرض
 Update Table,به‌روزرسانی جدول
+Please select both Start Date and End Date first.,لطفاً ابتدا هم تاریخ شروع و هم تاریخ پایان را انتخاب کنید.
+The date range has changed. This will update rows but preserve your existing data. New rows will use default counts. Proceed?,بازه زمانی تغییر کرده است. این کار سطرها را به‌روزرسانی می‌کند اما داده‌های فعلی شما حفظ می‌شوند. سطرهای جدید با مقادیر پیش‌فرض پر خواهند شد. مایل به ادامه هستید؟
+Please select Project and Start Date first.,لطفاً ابتدا پروژه و تاریخ شروع را انتخاب کنید.
+End Date derived from Project Settings.,تاریخ پایان از تنظیمات پروژه استخراج شد.
+Could not calculate End Date. Please check JNZ Project Settings.,امکان محاسبه تاریخ پایان وجود ندارد. لطفاً تنظیمات پروژه را بررسی کنید.
+End Date is required. Use 'Fill End Date' button if needed.,تاریخ پایان الزامی است. در صورت نیاز از دکمه 'Fill End Date' استفاده کنید.
+Date change discarded.,تغییرات تاریخ لغو شد.
+"Are you sure you want to overwrite all rows in the table with the default breakfast ({0}), lunch ({1}), and dinner ({2}) counts?",آیا مطمئن هستید که می‌خواهید تمام سطرهای جدول را با مقادیر پیش‌فرض صبحانه ({0})، ناهار ({1}) و شام ({2}) بازنویسی کنید؟
+Default counts successfully applied to all rows.,مقادیر پیش‌فرض با موفقیت روی تمام سطرها اعمال شد.
+End Date cannot be before Start Date.,تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد.
+Fill End Date,تکمیل تاریخ پایان
+Start Date is required.,تاریخ شروع الزامی است.
+Please fill the following mandatory fields before saving:,لطفاً قبل از ذخیره، فیلدهای اجباری زیر را پر کنید:
+is required.,الزامی است.
+Missing Fields,فیلدهای گمشده
