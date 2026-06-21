@@ -213,3 +213,4 @@ Start Date is required.,تاریخ شروع الزامی است.
 Please fill the following mandatory fields before saving:,لطفاً قبل از ذخیره، فیلدهای اجباری زیر را پر کنید:
 is required.,الزامی است.
 Missing Fields,فیلدهای گمشده
+You do not have the required role to perform the action {0} in project {1}!,شما در پروژه {1} نقش لازم برای انجام اکشن {0} را ندارید!

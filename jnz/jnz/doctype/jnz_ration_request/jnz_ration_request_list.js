@@ -7,3 +7,4 @@ frappe.listview_settings["JNZ Ration Request"] = {
         return [__("Draft"), "orange", "docstatus,=,0"];
     },
 };
+

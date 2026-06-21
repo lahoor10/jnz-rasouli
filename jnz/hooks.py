@@ -49,10 +49,18 @@ scheduler_events = {
     ]
 }
 
-# jnz/jnz/hooks.py
-
 permission_query_conditions = {
     "JNZ Project": "jnz.permissions.get_project_query_conditions",
     "JNZ Ration Request": "jnz.permissions.get_ration_request_query_conditions",
     "JNZ Food Request": "jnz.permissions.get_food_request_query_conditions",
+}
+
+
+doc_events = {
+    "JNZ Ration Request": {
+        "validate": "jnz.permissions.check_project_workflow_permission"
+    },
+    "JNZ Food Request": {
+        "validate": "jnz.permissions.check_project_workflow_permission"
+    }
 }

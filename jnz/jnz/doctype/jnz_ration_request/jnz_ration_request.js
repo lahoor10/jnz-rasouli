@@ -7,6 +7,51 @@ const DOCTYPE = "JNZ Ration Request";
 frappe.ui.form.on(DOCTYPE, {
     refresh(frm) {
         new JNZRationRequestFormController(frm).init();
+        // مخفی کردن دکمه‌های غیرمجاز ورک‌فلو
+        if (!frm.is_new() && frm.doc.workflow_state) {
+            
+            // گرفتن نام پروژه با توجه به داک‌تایپ (جیره یا غذا)
+            let proj_name = frm.doc.rreq_project || frm.doc.freq_project;
+            
+            if (proj_name) {
+                frappe.call({
+                    method: "jnz.permissions.get_unauthorized_workflow_actions",
+                    args: {
+                        doctype: frm.doctype,
+                        project_name: proj_name,
+                        current_state: frm.doc.workflow_state
+                    },
+                    callback: function(r) {
+                        // این لاگ رو گذاشتم تا توی کنسول مرورگر (F12) ببینی آیا بک‌اند لیست رو درست می‌فرسته یا نه
+                        console.log("Unauthorized Actions:", r.message); 
+
+                        if (r.message && r.message.length > 0) {
+                            let attempts = 0;
+                            
+                            // مکانیزم سرکوب مداوم: هر 200 میلی‌ثانیه چک می‌کند (تا 10 بار)
+                            let hide_interval = setInterval(() => {
+                                r.message.forEach(action => {
+                                    let translated_action = __(action);
+
+                                    // مخفی کردن دکمه اصلی (آبی رنگ)
+                                    $(`[data-label="${action}"]`).hide();
+                                    $(`[data-label="${translated_action}"]`).hide();
+
+                                    // مخفی کردن کل ردیف (li) اگر دکمه داخل منوی کشویی Actions باشد
+                                    $(`[data-label="${action}"]`).closest('li').hide();
+                                    $(`[data-label="${translated_action}"]`).closest('li').hide();
+                                });
+
+                                attempts++;
+                                if (attempts > 10) {
+                                    clearInterval(hide_interval); // بعد از 2 ثانیه عملیات متوقف می‌شود تا رم مرورگر اشغال نشود
+                                }
+                            }, 200);
+                        }
+                    }
+                });
+            }
+        }
     },
 
     rreq_project(frm) {

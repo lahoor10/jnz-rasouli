@@ -6,6 +6,47 @@ const DOCTYPE = "JNZ Food Request";
 frappe.ui.form.on(DOCTYPE, {
     refresh(frm) {
         new JNZFoodRequestFormController(frm).init();
+        // مخفی کردن دکمه‌های غیرمجاز ورک‌فلو
+        if (!frm.is_new() && frm.doc.workflow_state) {
+            
+            // گرفتن نام پروژه با توجه به داک‌تایپ (جیره یا غذا)
+            let proj_name = frm.doc.rreq_project || frm.doc.freq_project;
+            
+            if (proj_name) {
+                frappe.call({
+                    method: "jnz.permissions.get_unauthorized_workflow_actions",
+                    args: {
+                        doctype: frm.doctype,
+                        project_name: proj_name,
+                        current_state: frm.doc.workflow_state
+                    },
+                    callback: function(r) {
+                        if (r.message && r.message.length > 0) {
+                            let css_rules = "";
+                            
+                            r.message.forEach(action => {
+                                let translated_action = __(action);
+                                
+                                // ساخت قوانین CSS برای مخفی کردن قطعی
+                                css_rules += `
+                                    [data-label="${action}"] { display: none !important; }
+                                    [data-label="${translated_action}"] { display: none !important; }
+                                    button:contains('${action}') { display: none !important; }
+                                    button:contains('${translated_action}') { display: none !important; }
+                                    a.dropdown-item:contains('${action}') { display: none !important; }
+                                    a.dropdown-item:contains('${translated_action}') { display: none !important; }
+                                `;
+                            });
+
+                            if (css_rules) {
+                                // تزریق استایل به مرورگر
+                                $("<style type='text/css'>" + css_rules + "</style>").appendTo("head");
+                            }
+                        }
+                    }
+                });
+            }
+        }
     },
 
     freq_project(frm) {
