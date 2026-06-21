@@ -11,6 +11,8 @@
   "active",
   "col_break_main",
   "description",
+  "section_break_qvre",
+  "kitchen",
   "section_break_vxaa",
   "members"
  ],
@@ -63,10 +65,21 @@
    "fieldtype": "Table",
    "label": "Members",
    "options": "JNZ Project Members CT"
+  },
+  {
+   "fieldname": "kitchen",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Kitchen",
+   "options": "JNZ Kitchen"
+  },
+  {
+   "fieldname": "section_break_qvre",
+   "fieldtype": "Section Break"
   }
  ],
  "links": [],
- "modified": "2026-06-18 16:21:51.442315",
+ "modified": "2026-06-21 12:48:46.133872",
  "modified_by": "Administrator",
  "module": "JNZ",
  "name": "JNZ Project",

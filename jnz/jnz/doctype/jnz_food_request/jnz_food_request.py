@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import today, add_days, getdate
+from frappe.utils.data import get_url_to_form
 import jdatetime
 
 # ---------------------------------------------------------------------------
@@ -13,6 +14,84 @@ DOCTYPE_PROJECT_SETTINGS = "JNZ Project Settings"
 
 class JNZFoodRequest(Document):
 
+   # اجرا هنگام ذخیره در حالت پیش‌نویس (Draft - Docstatus 0)
+    def on_update(self):
+        self.send_custom_workflow_email()
+
+    # اجرا هنگام تایید و نهایی شدن (Submit - Docstatus 1)
+    def on_submit(self):
+        self.send_custom_workflow_email()
+
+    # اجرا هنگام لغو یا رد شدن (Cancel - Docstatus 2)
+    def on_cancel(self):
+        self.send_custom_workflow_email()
+
+    def send_custom_workflow_email(self):
+        doc_before_save = self.get_doc_before_save()
+        if not doc_before_save:
+            return
+
+        previous_state = doc_before_save.workflow_state
+        current_state = self.workflow_state
+
+        # جلوگیری از ارسال ایمیل تکراری در صورت عدم تغییر وضعیت ورک‌فلو
+        if current_state == previous_state:
+            return
+
+        state_role_map = {
+            "Pending Site Supervisor Approval": "JNZ_ROLE_Site_Supervisor",
+            "Pending Project Manager Approval": "JNZ_ROLE__Project_Manager",
+            "Pending Security Approval": "JNZ_ROLE__Security_Department",
+            "Pending HR Approval": "JNZ_ROLE__HR",
+            "Pending CEO Office Approval": "JNZ_ROLE__CEO_Office",
+            "Pending CEO Approval": "JNZ_ROLE_CEO",
+            # اگر می‌خواهی در حالت Approved یا Rejected هم به کسی (مثلاً سیستم منیجر) 
+            # ایمیل برود، باید نقش‌های آن‌ها را هم اینجا اضافه کنی.
+        }
+
+        if current_state not in state_role_map:
+            return
+
+        target_role = state_role_map[current_state]
+
+        if not self.freq_project:
+            return
+
+        recipients = frappe.get_all(
+            "JNZ Project Members CT",
+            filters={
+                "parent": self.freq_project,
+                "parenttype": "JNZ Project",
+                "role": target_role
+            },
+            pluck="member"
+        )
+        
+        frappe.msgprint(f"لیست گیرندگان پیدا شده برای نقش {target_role}: {recipients}")
+
+        if recipients:
+            project_name = frappe.db.get_value("JNZ Project", self.freq_project, "proj_name") or self.freq_project
+            doc_url = get_url_to_form(self.doctype, self.name)
+            
+            subject = f"درخواست غذای جدید - پروژه: {project_name}"
+            message = f"""
+            <div style="direction: rtl; text-align: right; font-family: Tahoma, sans-serif;">
+                <p>با سلام،</p>
+                <p>درخواست غذای شماره <b>{self.name}</b> تغییر وضعیت داده و هم‌اکنون در مرحله <b>{_(current_state)}</b> منتظر بررسی و تایید شماست.</p>
+                <p><b>نام پروژه:</b> {project_name}</p>
+                <p>جهت مشاهده و ثبت تاییدیه، روی لینک زیر کلیک کنید:</p>
+                <p><a href="{doc_url}">مشاهده درخواست</a></p>
+            </div>
+            """
+
+            frappe.sendmail(
+                recipients=recipients,
+                subject=subject,
+                message=message,
+                reference_doctype=self.doctype,
+                reference_name=self.name,
+                now=False
+            )
     # ------------------------------------------------------------------
     # Lifecycle hooks
     # ------------------------------------------------------------------

@@ -7,15 +7,16 @@
  "field_order": [
   "rreq_project",
   "rreq_request_date",
-  "rreq_workers_count",
   "days",
+  "column_break_ab19",
+  "resident_workers_count",
+  "non_resident_workers_count",
   "col_break_flags",
   "rreq_has_meeting",
   "rreq_has_lunch",
   "sec_items",
   "rreq_items",
-  "connections_tab",
-  "amended_from"
+  "connections_tab"
  ],
  "fields": [
   {
@@ -34,13 +35,6 @@
    "in_list_view": 1,
    "label": "Request Date",
    "read_only": 1,
-   "reqd": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "rreq_workers_count",
-   "fieldtype": "Int",
-   "label": "Workers Count",
    "reqd": 1
   },
   {
@@ -83,18 +77,26 @@
    "reqd": 1
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "JNZ Ration Request",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
+   "default": "0",
+   "fieldname": "resident_workers_count",
+   "fieldtype": "Int",
+   "label": "Resident Workers Count",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "non_resident_workers_count",
+   "fieldtype": "Int",
+   "label": "Non-Resident Workers Count",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ab19",
+   "fieldtype": "Column Break"
   }
  ],
  "links": [],
- "modified": "2026-06-17 09:54:46.951244",
+ "modified": "2026-06-21 13:07:14.783155",
  "modified_by": "Administrator",
  "module": "JNZ",
  "name": "JNZ Ration Request",

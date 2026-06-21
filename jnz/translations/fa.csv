@@ -214,3 +214,18 @@ Please fill the following mandatory fields before saving:,لطفاً قبل از
 is required.,الزامی است.
 Missing Fields,فیلدهای گمشده
 You do not have the required role to perform the action {0} in project {1}!,شما در پروژه {1} نقش لازم برای انجام اکشن {0} را ندارید!
+
+"JNZ Kitchen","آشپزخانه"
+"Kitchen Name","نام آشپزخانه"
+"Location","محل"
+"Province","استان"
+"County","شهرستان"
+"City","شهر"
+"Address","آدرس"
+"Manager Details","اطلاعات مسئول"
+"Manager Name","نام مسئول آشپزخانه"
+"Manager Phone","شماره تماس مسئول آشپزخانه"
+"Kitchen","آشپزخانه"
+"Resident Workers Count","تعداد کارکنان با بیتوته"
+"Non-Resident Workers Count","تعداد کارکنان بدون بیتوته"
+"Is For Resident Workers","مخصوص کارکنان با بیتوته"

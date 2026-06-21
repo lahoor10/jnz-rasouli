@@ -33,99 +33,83 @@ PERIOD_MONTHS_MAP = {
 
 class JNZRationRequest(Document):
 
-    # ------------------------------------------------------------------
-    # Lifecycle hooks
-    # ------------------------------------------------------------------
-
     def before_save(self):
         if not self.rreq_request_date:
             self.rreq_request_date = now_datetime()
-        self._remove_old_drafts()
         self._calculate_items()
 
     def validate(self):
         self._validate_inputs()
 
-    # ------------------------------------------------------------------
-    # Validation
-    # ------------------------------------------------------------------
-
     def _validate_inputs(self):
-        errors = []
-        if self.rreq_workers_count is not None and self.rreq_workers_count < 0:
-            errors.append(_("Workers Count cannot be negative."))
-        if errors:
-            frappe.throw("\n".join(errors))
-
-    # ------------------------------------------------------------------
-    # Item calculation
-    # ------------------------------------------------------------------
+        if (self.resident_workers_count or 0) < 0 or (self.non_resident_workers_count or 0) < 0:
+            frappe.throw(_("Workers Count cannot be negative."))
 
     def _calculate_items(self):
-        """
-        Rebuild rreq_items from scratch. Iterates all active Ration Rules,
-        applies condition gates and period eligibility. Items that fail any
-        check are silently excluded — not shown as 0.
-        """
         self.rreq_items = []
-
         project_doc = frappe.get_doc(DOCTYPE_PROJECT, self.rreq_project)
-
+        
+        # دریافت تمام قوانین فعال
         rules = frappe.get_all(
             DOCTYPE_RATION_RULE,
             filters={"active": 1},
-            fields=["name", "rrul_item", "rrul_calc_type", "rrul_amount", "rrul_period"],
+            fields=["name", "rrul_item", "rrul_calc_type", "rrul_amount", "rrul_period", "is_for_resident"]
         )
 
-        excluded = []
-
+        # دسته‌بندی قوانین برای هر کالا: {item_code: {"general": rule, "resident": rule}}
+        rules_by_item = {}
         for rule in rules:
-            conditions = frappe.get_all(
-                DOCTYPE_RATION_RULE_COND,
-                filters={"parent": rule.name},
-                fields=["rrc_condition", "rrc_condition_type"],
-            )
+            # بررسی شرایط و دوره زمانی
+            conditions = frappe.get_all(DOCTYPE_RATION_RULE_COND, filters={"parent": rule.name}, fields=["rrc_condition_type"])
+            if not self._conditions_met(conditions): continue
+            if rule.rrul_period != "per_request" and not self._period_eligible(rule): continue
+            
+            if rule.rrul_item not in rules_by_item: rules_by_item[rule.rrul_item] = {"general": None, "resident": None}
+            if rule.get("is_for_resident"): rules_by_item[rule.rrul_item]["resident"] = rule
+            else: rules_by_item[rule.rrul_item]["general"] = rule
 
-            if not self._conditions_met(conditions):
-                continue
+        # محاسبه نهایی
+        for item_code, rule_set in rules_by_item.items():
+            total_qty = 0
+            
+            # محاسبه برای بدون بیتوته (فقط قانون عمومی)
+            if rule_set["general"]:
+                total_qty += self._calculate_qty(rule_set["general"], project_doc, self.non_resident_workers_count)
+            
+            # محاسبه برای با بیتوته (اختصاصی اگر بود، وگرنه Fallback به عمومی)
+            res_rule = rule_set["resident"] or rule_set["general"]
+            if res_rule:
+                total_qty += self._calculate_qty(res_rule, project_doc, self.resident_workers_count)
 
-            if rule.rrul_period and rule.rrul_period != "per_request":
-                if not self._period_eligible(rule):
-                    continue
+            if total_qty > 0:
+                item_doc = frappe.get_doc(DOCTYPE_ITEM, item_code)
+                self.append("rreq_items", {
+                    "rri_item": item_code,
+                    "rri_item_name": item_doc.itm_name,
+                    "rri_quantity": total_qty,
+                    "rri_unit": item_doc.itm_default_unit,
+                })
 
-            qty = self._calculate_qty(rule, project_doc)
-            if qty is None or qty <= 0:
-                excluded.append(rule.rrul_item)
-                continue
+    def _calculate_qty(self, rule, project_doc, worker_count):
+        calc = rule.rrul_calc_type
+        amount = rule.rrul_amount or 0
+        days = self.days or 1
 
-            item_doc = frappe.get_doc(DOCTYPE_ITEM, rule.rrul_item)
-            self.append("rreq_items", {
-                "rri_item":      rule.rrul_item,
-                "rri_item_name": item_doc.itm_name,
-                "rri_quantity":  qty,
-                "rri_unit":      item_doc.itm_default_unit,
-            })
-
-        if excluded:
-            item_list = "\n".join(f"  \u2022 {i}" for i in excluded)
-            frappe.msgprint(
-                _("The following items were excluded due to zero quantity:\n{0}").format(item_list),
-                title=_("Items Excluded"),
-                indicator="orange",
-            )
+        if calc == CALC_PER_PERSON:
+            return amount * (worker_count or 0) * days
+        elif calc == CALC_PER_ROOM:
+            return amount * (project_doc.proj_rooms_count or 0) * days
+        elif calc == CALC_PER_PROJECT:
+            return amount * days
+        elif calc == CALC_PER_MEETING:
+            return (amount * days) if self.rreq_has_meeting else 0
+        return 0
 
     def _conditions_met(self, conditions):
-        """Return True only when ALL conditions on the rule are satisfied."""
-        if not conditions:
-            return True
         for cond in conditions:
             ctype = (cond.rrc_condition_type or "").lower()
-            if ctype == COND_MEETING and not self.rreq_has_meeting:
-                return False
-            if ctype == COND_LUNCH and not self.rreq_has_lunch:
-                return False
-            # management-approval / special-request / event conditions
-            # are resolved outside auto-calculation and do not block here.
+            if ctype == "meeting" and not self.rreq_has_meeting: return False
+            if ctype == "lunch" and not self.rreq_has_lunch: return False
         return True
 
     def _period_eligible(self, rule):
@@ -160,46 +144,3 @@ class JNZRationRequest(Document):
 
         threshold = add_months(last[0][0], months)
         return now_datetime() >= threshold
-
-    def _calculate_qty(self, rule, project_doc):
-        calc   = rule.rrul_calc_type
-        amount = rule.rrul_amount or 0
-        days   = self.days or 1   # ⭐ مهم‌ترین خط
-
-        if calc == CALC_PER_PERSON:
-            return amount * (self.rreq_workers_count or 0) * days
-
-        if calc == CALC_PER_ROOM:
-            return amount * (project_doc.proj_rooms_count or 0) * days
-
-        if calc == CALC_PER_PROJECT:
-            return amount * days
-
-        if calc == CALC_PER_MEETING:
-            return (amount * days) if self.rreq_has_meeting else None
-
-        return None
-
-    def _remove_old_drafts(self):
-        """Keep only one draft per project."""
-
-        if not self.rreq_project:
-            return
-
-        old_drafts = frappe.get_all(
-            DOCTYPE_RATION_REQUEST,
-            filters={
-                "rreq_project": self.rreq_project,
-                "docstatus": 0,
-                "name": ["!=", self.name or "__new__"],
-            },
-            pluck="name",
-        )
-
-        for draft_name in old_drafts:
-            frappe.delete_doc(
-                DOCTYPE_RATION_REQUEST,
-                draft_name,
-                force=True,
-                ignore_permissions=True,
-            )

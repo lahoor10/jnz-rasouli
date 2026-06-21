@@ -1,20 +1,14 @@
 {
  "actions": [],
- "doctype": "DocType",
- "name": "JNZ Ration Rule",
- "module": "JNZ",
- "naming_rule": "Expression",
  "autoname": "RRUL-.#####",
- "title_field": "rrul_item",
- "show_title_field_in_link": 1,
- "track_changes": 1,
- "is_submittable": 0,
- "links": [],
- "states": [],
+ "creation": "2026-06-16 12:54:08.405672",
+ "doctype": "DocType",
+ "engine": "InnoDB",
  "field_order": [
   "rrul_item",
   "user_define_code",
   "rrul_calc_type",
+  "is_for_resident",
   "rrul_amount",
   "rrul_period",
   "active",
@@ -27,12 +21,12 @@
   {
    "fieldname": "rrul_item",
    "fieldtype": "Link",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Item",
    "options": "JNZ Item",
-   "reqd": 1,
-   "in_list_view": 1,
-   "in_global_search": 1,
-   "in_standard_filter": 1
+   "reqd": 1
   },
   {
    "fieldname": "user_define_code",
@@ -42,10 +36,10 @@
   {
    "fieldname": "rrul_calc_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Calculation Type",
    "options": "\nper_person\nper_room\nper_project\nper_meeting",
-   "reqd": 1,
-   "in_list_view": 1
+   "reqd": 1
   },
   {
    "fieldname": "rrul_amount",
@@ -60,11 +54,11 @@
    "options": "\nper_request\nper_month\nper_two_month\nper_week"
   },
   {
+   "default": "1",
    "fieldname": "active",
    "fieldtype": "Check",
-   "label": "Active",
-   "default": "1",
-   "in_list_view": 1
+   "in_list_view": 1,
+   "label": "Active"
   },
   {
    "fieldname": "col_break_main",
@@ -77,57 +71,74 @@
   },
   {
    "fieldname": "sec_conditions",
-   "fieldtype": "Section Break",
-   "label": ""
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "rrul_conditions",
    "fieldtype": "Table",
    "label": "Conditions",
    "options": "JNZ Ration Rule Condition CT"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.rrul_calc_type == 'per_person'",
+   "fieldname": "is_for_resident",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is For Resident Workers"
   }
  ],
- "search_fields": "rrul_item,user_define_code",
+ "links": [],
+ "modified": "2026-06-21 13:23:54.254657",
+ "modified_by": "Administrator",
+ "module": "JNZ",
+ "name": "JNZ Ration Rule",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
  "permissions": [
   {
-   "role": "System Manager",
-   "read": 1,
-   "write": 1,
    "create": 1,
    "delete": 1,
-   "report": 1,
+   "email": 1,
    "export": 1,
    "print": 1,
-   "email": 1,
-   "share": 1
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
   },
   {
+   "create": 1,
+   "read": 1,
    "role": "JNZ_ROLE__Project_Manager",
-   "read": 1,
-   "write": 1,
-   "create": 1,
-   "delete": 0
+   "write": 1
   },
   {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
    "role": "JNZ_ROLE__CEO_Office",
-   "read": 1,
-   "write": 1,
-   "create": 1,
-   "delete": 1
+   "write": 1
   },
   {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
    "role": "JNZ_ROLE_CEO",
-   "read": 1,
-   "write": 1,
-   "create": 1,
-   "delete": 1
+   "write": 1
   },
   {
-   "role": "JNZ_ROLE_Site_Supervisor",
    "read": 1,
-   "write": 0,
-   "create": 0,
-   "delete": 0
+   "role": "JNZ_ROLE_Site_Supervisor"
   }
- ]
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "rrul_item,user_define_code",
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "rrul_item",
+ "track_changes": 1
 }
