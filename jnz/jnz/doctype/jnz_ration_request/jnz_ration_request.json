@@ -16,7 +16,20 @@
   "rreq_has_lunch",
   "sec_items",
   "rreq_items",
-  "connections_tab"
+  "connections_tab",
+  "sec_approver_counts",
+  "support_supervisor_resident_count",
+  "support_supervisor_non_resident_count",
+  "commercial_manager_resident_count",
+  "commercial_manager_non_resident_count",
+  "ceo_office_resident_count",
+  "ceo_office_non_resident_count",
+  "security_resident_count",
+  "security_non_resident_count",
+  "finance_resident_count",
+  "finance_non_resident_count",
+  "ceo_resident_count",
+  "ceo_non_resident_count"
  ],
  "fields": [
   {
@@ -93,10 +106,87 @@
   {
    "fieldname": "column_break_ab19",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sec_approver_counts",
+   "fieldtype": "Section Break",
+   "label": "Approvers Workers Adjustment"
+  },
+  {
+   "default": "0",
+   "fieldname": "support_supervisor_resident_count",
+   "fieldtype": "Int",
+   "label": "Support Supervisor Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "support_supervisor_non_resident_count",
+   "fieldtype": "Int",
+   "label": "Support Supervisor Non-Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "commercial_manager_resident_count",
+   "fieldtype": "Int",
+   "label": "Commercial Manager Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "commercial_manager_non_resident_count",
+   "fieldtype": "Int",
+   "label": "Commercial Manager Non-Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "ceo_office_resident_count",
+   "fieldtype": "Int",
+   "label": "CEO Office Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "ceo_office_non_resident_count",
+   "fieldtype": "Int",
+   "label": "CEO Office Non-Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "security_resident_count",
+   "fieldtype": "Int",
+   "label": "Security Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "security_non_resident_count",
+   "fieldtype": "Int",
+   "label": "Security Non-Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "finance_resident_count",
+   "fieldtype": "Int",
+   "label": "Finance Manager Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "finance_non_resident_count",
+   "fieldtype": "Int",
+   "label": "Finance Manager Non-Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "ceo_resident_count",
+   "fieldtype": "Int",
+   "label": "CEO Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "ceo_non_resident_count",
+   "fieldtype": "Int",
+   "label": "CEO Non-Resident Count"
   }
  ],
  "links": [],
- "modified": "2026-06-21 13:07:14.783155",
+ "modified": "2026-06-21 14:57:31.503049",
  "modified_by": "Administrator",
  "module": "JNZ",
  "name": "JNZ Ration Request",
