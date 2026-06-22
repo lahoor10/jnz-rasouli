@@ -9,27 +9,29 @@
   "rreq_request_date",
   "days",
   "column_break_ab19",
-  "resident_workers_count",
-  "non_resident_workers_count",
+  "draft_resident_workers_count",
+  "draft_non_resident_workers_count",
   "col_break_flags",
   "rreq_has_meeting",
   "rreq_has_lunch",
-  "sec_items",
-  "rreq_items",
-  "connections_tab",
   "sec_approver_counts",
+  "resistance_workers_count_column",
   "support_supervisor_resident_count",
-  "support_supervisor_non_resident_count",
   "commercial_manager_resident_count",
-  "commercial_manager_non_resident_count",
   "ceo_office_resident_count",
-  "ceo_office_non_resident_count",
   "security_resident_count",
-  "security_non_resident_count",
   "finance_resident_count",
-  "finance_non_resident_count",
   "ceo_resident_count",
-  "ceo_non_resident_count"
+  "non_resistance_workers_count_column",
+  "support_supervisor_non_resident_count",
+  "commercial_manager_non_resident_count",
+  "ceo_office_non_resident_count",
+  "security_non_resident_count",
+  "finance_non_resident_count",
+  "ceo_non_resident_count",
+  "section_break_k5tb",
+  "rreq_items",
+  "connections_tab"
  ],
  "fields": [
   {
@@ -67,10 +69,6 @@
    "label": "Has Lunch"
   },
   {
-   "fieldname": "sec_items",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "rreq_items",
    "fieldtype": "Table",
    "label": "Requested Items",
@@ -90,20 +88,6 @@
    "reqd": 1
   },
   {
-   "default": "0",
-   "fieldname": "resident_workers_count",
-   "fieldtype": "Int",
-   "label": "Resident Workers Count",
-   "reqd": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "non_resident_workers_count",
-   "fieldtype": "Int",
-   "label": "Non-Resident Workers Count",
-   "reqd": 1
-  },
-  {
    "fieldname": "column_break_ab19",
    "fieldtype": "Column Break"
   },
@@ -120,21 +104,9 @@
   },
   {
    "default": "0",
-   "fieldname": "support_supervisor_non_resident_count",
-   "fieldtype": "Int",
-   "label": "Support Supervisor Non-Resident Count"
-  },
-  {
-   "default": "0",
    "fieldname": "commercial_manager_resident_count",
    "fieldtype": "Int",
    "label": "Commercial Manager Resident Count"
-  },
-  {
-   "default": "0",
-   "fieldname": "commercial_manager_non_resident_count",
-   "fieldtype": "Int",
-   "label": "Commercial Manager Non-Resident Count"
   },
   {
    "default": "0",
@@ -144,21 +116,9 @@
   },
   {
    "default": "0",
-   "fieldname": "ceo_office_non_resident_count",
-   "fieldtype": "Int",
-   "label": "CEO Office Non-Resident Count"
-  },
-  {
-   "default": "0",
    "fieldname": "security_resident_count",
    "fieldtype": "Int",
    "label": "Security Resident Count"
-  },
-  {
-   "default": "0",
-   "fieldname": "security_non_resident_count",
-   "fieldtype": "Int",
-   "label": "Security Non-Resident Count"
   },
   {
    "default": "0",
@@ -168,25 +128,78 @@
   },
   {
    "default": "0",
-   "fieldname": "finance_non_resident_count",
-   "fieldtype": "Int",
-   "label": "Finance Manager Non-Resident Count"
-  },
-  {
-   "default": "0",
    "fieldname": "ceo_resident_count",
    "fieldtype": "Int",
    "label": "CEO Resident Count"
   },
   {
    "default": "0",
+   "fieldname": "support_supervisor_non_resident_count",
+   "fieldtype": "Int",
+   "label": "Support Supervisor Non-Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "commercial_manager_non_resident_count",
+   "fieldtype": "Int",
+   "label": "Commercial Manager Non-Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "ceo_office_non_resident_count",
+   "fieldtype": "Int",
+   "label": "CEO Office Non-Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "security_non_resident_count",
+   "fieldtype": "Int",
+   "label": "Security Non-Resident Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "finance_non_resident_count",
+   "fieldtype": "Int",
+   "label": "Finance Manager Non-Resident Count"
+  },
+  {
+   "default": "0",
    "fieldname": "ceo_non_resident_count",
    "fieldtype": "Int",
    "label": "CEO Non-Resident Count"
+  },
+  {
+   "fieldname": "section_break_k5tb",
+   "fieldtype": "Section Break",
+   "label": "Requested Items"
+  },
+  {
+   "fieldname": "non_resistance_workers_count_column",
+   "fieldtype": "Column Break",
+   "label": "Non-Resident Workers Count"
+  },
+  {
+   "fieldname": "resistance_workers_count_column",
+   "fieldtype": "Column Break",
+   "label": "Resident Workers Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "draft_resident_workers_count",
+   "fieldtype": "Int",
+   "label": "Draft Resident Workers Count",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "draft_non_resident_workers_count",
+   "fieldtype": "Int",
+   "label": "Draft Non-Resident Workers Count",
+   "reqd": 1
   }
  ],
  "links": [],
- "modified": "2026-06-21 14:57:31.503049",
+ "modified": "2026-06-22 12:22:28.969904",
  "modified_by": "Administrator",
  "module": "JNZ",
  "name": "JNZ Ration Request",
@@ -207,12 +220,14 @@
   },
   {
    "create": 1,
+   "delete": 1,
    "read": 1,
    "role": "JNZ_ROLE_Site_Supervisor",
    "write": 1
   },
   {
    "create": 1,
+   "delete": 1,
    "read": 1,
    "role": "JNZ_ROLE__Project_Manager",
    "write": 1
@@ -232,12 +247,18 @@
    "write": 1
   },
   {
+   "create": 1,
+   "delete": 1,
    "read": 1,
-   "role": "JNZ_ROLE__HR"
+   "role": "JNZ_ROLE__HR",
+   "write": 1
   },
   {
+   "create": 1,
+   "delete": 1,
    "read": 1,
-   "role": "JNZ_ROLE__Security_Department"
+   "role": "JNZ_ROLE__Security_Department",
+   "write": 1
   }
  ],
  "row_format": "Dynamic",
@@ -245,20 +266,7 @@
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [
-  {
-   "color": "Orange",
-   "title": "Draft"
-  },
-  {
-   "color": "Green",
-   "title": "Submitted"
-  },
-  {
-   "color": "Red",
-   "title": "Cancelled"
-  }
- ],
+ "states": [],
  "title_field": "rreq_project",
  "track_changes": 1
 }

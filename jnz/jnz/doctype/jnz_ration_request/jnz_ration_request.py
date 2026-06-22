@@ -26,12 +26,14 @@ PERIOD_MONTHS_MAP = {
 }
 
 WORKFLOW_ROLE_MAP = {
-    "Pending Site Supervisor Approval": "support_supervisor",
-    "Pending Project Manager Approval": "commercial_manager",
+    "Draft": "support_supervisor", # در حالت درفت بگذارید روی ساپورت محاسبات انجام شود
+    "Pending Support Approval": "support_supervisor",
+    "Pending Commercial Approval": "commercial_manager",
     "Pending CEO Office Approval": "ceo_office",
     "Pending Security Approval": "security",
-    "Pending HR Approval": "finance",
-    "Pending CEO Approval": "ceo"
+    "Pending Finance Approval": "finance",
+    "Pending CEO Approval": "ceo",
+    "Approved": "ceo" # در حالت نهایی بر اساس آخرین نظر مدیرعامل بماند
 }
 
 class JNZRationRequest(Document):
@@ -39,17 +41,9 @@ class JNZRationRequest(Document):
     def before_save(self):
         if not self.rreq_request_date:
             self.rreq_request_date = now_datetime()
-            
-        # مقداردهی اولیه فیلدهای تعدیل تاییدکنندگان (بند ۷)
-        approver_prefixes = ["support_supervisor", "commercial_manager", "ceo_office", "security", "finance", "ceo"]
-        for prefix in approver_prefixes:
-            res_field = f"{prefix}_resident_count"
-            non_res_field = f"{prefix}_non_resident_count"
-            
-            if not self.get(res_field) and self.resident_workers_count:
-                self.set(res_field, self.resident_workers_count)
-            if not self.get(non_res_field) and self.non_resident_workers_count:
-                self.set(non_res_field, self.non_resident_workers_count)
+        
+        # مقداردهی اولیه فیلدهای تعدیل تاییدکنندگان (جلوگیری از کد تکراری)
+        self.set_default_approver_counts()
                 
         self._calculate_items()
 
@@ -58,7 +52,7 @@ class JNZRationRequest(Document):
         self._validate_ration_period_and_duplicate()
 
     def _validate_inputs(self):
-        if (self.resident_workers_count or 0) < 0 or (self.non_resident_workers_count or 0) < 0:
+        if (self.draft_resident_workers_count or 0) < 0 or (self.draft_non_resident_workers_count or 0) < 0:
             frappe.throw(_("Workers Count cannot be negative."))
 
     def _validate_ration_period_and_duplicate(self):
@@ -79,8 +73,6 @@ class JNZRationRequest(Document):
         else:
             last_day = 30 if jdatetime.date(j_year, 1, 1).is_leap() else 29
 
-       
-
         start_gregorian = jdatetime.date(j_year, j_month, 1).togregorian()
         end_gregorian = jdatetime.date(j_year, j_month, last_day).togregorian()
 
@@ -100,16 +92,22 @@ class JNZRationRequest(Document):
                 .format(duplicate_request)
             )
         
-        
-         # بررسی بازه زمانی ۲۰ تا ۲۵ هر ماه شمسی (بند ۴ و ۵)
+        # بررسی بازه زمانی ۲۰ تا ۲۵ هر ماه شمسی (بند ۴ و ۵)
         has_special_role = "Administrator" in frappe.get_roles() or "JNZ_ROLE_Ration_Officer" in frappe.get_roles()
 
         if not has_special_role:
             if not (20 <= j_day <= 25):
                 frappe.throw(_("Ration Requests can only be submitted between the 20th and 25th of each Jalali month."))
 
-        
     def _calculate_items(self):
+        # تغییر تسک ۹ و ۱۰: نگهداری سهمیه‌های دستی وارد شده قبل از پاک شدن جدول
+        old_allocations = {}
+        for row in self.get("rreq_items") or []:
+            old_allocations[row.rri_item] = {
+                "allocated": row.rri_allocated_quantity,
+                "delivered": row.rri_delivered_quantity
+            }
+
         self.rreq_items = []
         if not self.rreq_project:
             return
@@ -123,8 +121,8 @@ class JNZRationRequest(Document):
             resident_count = self.get(f"{role_prefix}_resident_count") or 0
             non_resident_count = self.get(f"{role_prefix}_non_resident_count") or 0
         else:
-            resident_count = self.resident_workers_count or 0
-            non_resident_count = self.non_resident_workers_count or 0
+            resident_count = self.draft_resident_workers_count or 0
+            non_resident_count = self.draft_non_resident_workers_count or 0
 
         rules = frappe.get_all(
             DOCTYPE_RATION_RULE,
@@ -157,10 +155,17 @@ class JNZRationRequest(Document):
 
             if total_qty > 0:
                 item_doc = frappe.get_doc(DOCTYPE_ITEM, item_code)
+                
+                # تغییر تسک ۹ و ۱۰: بازیابی مقادیر ویرایش‌شده دستی قبلی، در غیر این صورت برابر مقدار درخواستی
+                alloc = old_allocations.get(item_code, {}).get("allocated", total_qty)
+                deliv = old_allocations.get(item_code, {}).get("delivered", total_qty)
+
                 self.append("rreq_items", {
                     "rri_item": item_code,
                     "rri_item_name": item_doc.itm_name,
                     "rri_quantity": total_qty,
+                    "rri_allocated_quantity": alloc,  # تسک ۹
+                    "rri_delivered_quantity": deliv,  # تسک ۱۰
                     "rri_unit": item_doc.itm_default_unit,
                 })
 
@@ -182,6 +187,7 @@ class JNZRationRequest(Document):
                 return amount * days * meetings_count
             return 0
         return 0
+
     def _conditions_met(self, conditions):
         for cond in conditions:
             ctype = (cond.rrc_condition_type or "").lower()
@@ -216,3 +222,71 @@ class JNZRationRequest(Document):
 
         threshold = add_months(last[0][0], months)
         return now_datetime() >= threshold
+    
+    def set_default_approver_counts(self):
+        # ۱. بررسی اینکه آیا واقعاً تغییر وضعیت (ورک‌فلو) اتفاق افتاده است یا خیر
+        old_state = self.db_get("workflow_state") if self.name else None
+        new_state = self.get("workflow_state")
+        
+        # اگر کاربر فقط دارد فرم را در همان مرحله ذخیره/ویرایش می‌کند، اصلاً فیلدها را اوررایت نکن
+        # تا بتواند عمداً عدد 0 یا هر عدد دیگری را وارد و ذخیره کند.
+        if old_state == new_state and old_state is not None:
+            return
+
+        # ترتیب ترتیبی مراحل ورک‌فلو و پیشوندهای آن‌ها
+        order = [
+            'support_supervisor',
+            'commercial_manager',
+            'ceo_office',
+            'security',
+            'finance',
+            'ceo'
+        ]
+        
+        # مپ کردن وضعیت قبلی به پیشوند فیلد (یعنی فیلدی که کاربر تازه رویش تغییرات داده و تایید کرده)
+        state_to_prefix = {
+            "Draft": "draft", # شروع کار
+            "Pending Support Approval": "support_supervisor",
+            "Pending Commercial Approval": "commercial_manager",
+            "Pending CEO Office Approval": "ceo_office",
+            "Pending Security Approval": "security",
+            "Pending Finance Approval": "finance",
+            "Pending CEO Approval": "ceo"
+        }
+        
+        old_prefix = state_to_prefix.get(old_state or "Draft")
+        
+        # ۲. تعیین مقدار مبنا (Source):
+        # اگر از درفت داریم خارج می‌شویم، مبنا ورودی اصلی فرم است.
+        # در غیر این صورت، مبنا عددی است که مسئولِ مرحله‌ی قبلی تایید کرده است.
+        if old_prefix == "draft":
+            source_res = self.get("draft_resident_workers_count") or 0
+            source_non_res = self.get("draft_non_resident_workers_count") or 0
+            start_update_idx = 0 # از اولین مسئول به بعد آپدیت شوند
+        else:
+            source_res = self.get(f"{old_prefix}_resident_count") or 0
+            source_non_res = self.get(f"{old_prefix}_non_resident_count") or 0
+            start_update_idx = order.index(old_prefix) + 1 # از مسئول بعدی به بعد آپدیت شوند
+
+        # ۳. تزریق آبشاری به آینده (Forward Cascade):
+        # این حلقه فقط فیلدهای مراحل «آینده» را با این مبنای جدید بروزرسانی می‌کند 
+        # و به مراحل «گذشته» هیچ کاری ندارد تا تاریخچه دست‌نخورده بماند.
+        for j in range(start_update_idx, len(order)):
+            future_prefix = order[j]
+            self.set(f"{future_prefix}_resident_count", source_res)
+            self.set(f"{future_prefix}_non_resident_count", source_non_res)
+
+@frappe.whitelist()
+def get_user_project_roles(project, user):
+    """
+    دریافت لیست نقش‌های یک کاربر در یک پروژه خاص از جدول JNZ Project Members CT
+    """
+    if not project or not user:
+        return []
+        
+    roles = frappe.get_all(
+        "JNZ Project Members CT",
+        filters={"parent": project, "member": user},
+        pluck="role"
+    )
+    return roles

@@ -1,66 +1,83 @@
 {
-  "actions": [],
-  "doctype": "DocType",
-  "name": "JNZ Ration Request Item CT",
-  "module": "JNZ",
-  "naming_rule": "Expression",
-  "autoname": "RRI-.#####",
-  "istable": 1,
-  "editable_grid": 1,
-  "engine": "InnoDB",
-  "grid_page_length": 50,
-  "index_web_pages_for_search": 1,
-  "rows_threshold_for_grid_search": 20,
-  "row_format": "Dynamic",
-  "sort_field": "creation",
-  "sort_order": "DESC",
-  "cannot_add_rows": 1,
-  "cannot_delete_rows": 1,
-  "track_changes": 0,
-  "links": [],
-  "states": [],
-  "field_order": [
-    "rri_item",
-    "rri_item_name",
-    "rri_quantity",
-    "rri_unit"
-  ],
-  "fields": [
-    {
-      "fieldname": "rri_item",
-      "fieldtype": "Link",
-      "label": "Item",
-      "options": "JNZ Item",
-      "reqd": 1,
-      "read_only": 1,
-      "no_copy": 1,
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "rri_item_name",
-      "fieldtype": "Data",
-      "label": "Item Name",
-      "fetch_from": "rri_item.itm_name",
-      "read_only": 1,
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "rri_quantity",
-      "fieldtype": "Float",
-      "label": "Requested Quantity",
-      "reqd": 1,
-      "read_only": 1,
-      "no_copy": 1,
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "rri_unit",
-      "fieldtype": "Data",
-      "label": "Unit",
-      "read_only": 1,
-      "no_copy": 1,
-      "in_list_view": 1
-    }
-  ],
-  "permissions": []
+ "actions": [],
+ "autoname": "RRI-.#####",
+ "creation": "2026-06-22 12:01:12.137414",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "rri_item",
+  "rri_item_name",
+  "rri_quantity",
+  "rri_unit",
+  "rri_allocated_quantity",
+  "rri_delivered_quantity"
+ ],
+ "fields": [
+  {
+   "fieldname": "rri_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "no_copy": 1,
+   "options": "JNZ Item",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "rri_item.itm_name",
+   "fieldname": "rri_item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rri_quantity",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Requested Quantity",
+   "no_copy": 1,
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "rri_allocated_quantity",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Allocated Quantity"
+  },
+  {
+   "default": "0",
+   "fieldname": "rri_delivered_quantity",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Delivered Quantity"
+  },
+  {
+   "fieldname": "rri_unit",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unit",
+   "no_copy": 1,
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-06-22 12:01:54.443537",
+ "modified_by": "Administrator",
+ "module": "JNZ",
+ "name": "JNZ Ration Request Item CT",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
 }

@@ -7,6 +7,8 @@ const DOCTYPE = "JNZ Ration Request";
 frappe.ui.form.on(DOCTYPE, {
     refresh(frm) {
         new JNZRationRequestFormController(frm).init();
+        frm.trigger('toggle_approver_fields');
+        
         // مخفی کردن دکمه‌های غیرمجاز ورک‌فلو
         if (!frm.is_new() && frm.doc.workflow_state) {
             
@@ -54,8 +56,13 @@ frappe.ui.form.on(DOCTYPE, {
         }
     },
 
+    workflow_state(frm) {
+        frm.trigger('toggle_approver_fields');
+    },
+
     rreq_project(frm) {
         new JNZRationRequestFieldHandler(frm).on_project_change();
+        frm.trigger('toggle_approver_fields');
     },
 
     rreq_has_meeting(frm) {
@@ -66,9 +73,60 @@ frappe.ui.form.on(DOCTYPE, {
         new JNZRationRequestFieldHandler(frm).on_flag_change();
     },
 
-    rreq_workers_count(frm) {
+    draft_resident_workers_count(frm) {
         new JNZRationRequestFieldHandler(frm).on_flag_change();
     },
+    draft_non_resident_workers_count(frm) {
+        new JNZRationRequestFieldHandler(frm).on_flag_change();
+    },
+
+    toggle_approver_fields(frm) {
+        // ۱. قفل کردن تمام فیلدهای تأییدکنندگان به‌صورت پیش‌فرض
+        const approver_prefixes = [
+            'support_supervisor', 'commercial_manager',
+            'ceo_office', 'security', 'finance', 'ceo'
+        ];
+
+        approver_prefixes.forEach(prefix => {
+            frm.set_df_property(prefix + '_resident_count', 'read_only', 1);
+            frm.set_df_property(prefix + '_non_resident_count', 'read_only', 1);
+        });
+
+        if (!frm.doc.rreq_project || !frm.doc.workflow_state) return;
+
+        // ۲. دریافت نقش‌های این کاربر در این پروژه خاص
+        frappe.call({
+            method: 'jnz.jnz.doctype.jnz_ration_request.jnz_ration_request.get_user_project_roles',
+            args: {
+                project: frm.doc.rreq_project,
+                user: frappe.session.user
+            },
+            callback: function(r) {
+                let user_roles_in_project = r.message || [];
+                let is_system_manager = frappe.user_roles.includes("System Manager");
+
+                // ۳. مپ کردن دقیق Stateهای ورک‌فلو به نقش‌ها
+                const state_role_map = {
+                    "Pending Support Approval": { role: "JNZ_ROLE_Support_Supervisor", prefix: "support_supervisor" },
+                    "Pending Commercial Approval": { role: "JNZ_ROLE_Commercial_Manager", prefix: "commercial_manager" },
+                    "Pending CEO Office Approval": { role: "JNZ_ROLE__CEO_Office", prefix: "ceo_office" },
+                    "Pending Security Approval": { role: "JNZ_ROLE__Security_Department", prefix: "security" },
+                    "Pending Finance Approval": { role: "JNZ_ROLE_Finance_Manager", prefix: "finance" },
+                    "Pending CEO Approval": { role: "JNZ_ROLE_CEO", prefix: "ceo" }
+                };
+
+                let current_state_config = state_role_map[frm.doc.workflow_state];
+
+                // ۴. باز کردن فیلد در صورت تطابق نقش
+                if (current_state_config) {
+                    if (user_roles_in_project.includes(current_state_config.role) || is_system_manager) {
+                        frm.set_df_property(current_state_config.prefix + '_resident_count', 'read_only', 0);
+                        frm.set_df_property(current_state_config.prefix + '_non_resident_count', 'read_only', 0);
+                    }
+                }
+            }
+        });
+    }
 });
 
 
@@ -96,7 +154,32 @@ class JNZRationRequestFormController {
         grid.update_docfield_property("rri_item",     "read_only", 1);
         grid.update_docfield_property("rri_quantity", "read_only", 1);
         grid.update_docfield_property("rri_unit",     "read_only", 1);
-        grid.reset_grid();
+        
+        // تغییر تسک ۹ و ۱۰: قفل و باز کردن ستون‌های جدول بر اساس نقش کاربر در پروژه
+        if (this.frm.doc.rreq_project) {
+            frappe.call({
+                method: 'jnz.jnz.doctype.jnz_ration_request.jnz_ration_request.get_user_project_roles',
+                args: {
+                    project: this.frm.doc.rreq_project,
+                    user: frappe.session.user
+                },
+                callback: (r) => {
+                    let user_roles = r.message || [];
+                    let is_system_manager = frappe.user_roles.includes("System Manager");
+                    
+                    let is_ration_officer = user_roles.includes("JNZ_ROLE_Ration_Officer") || is_system_manager;
+                    let is_delivery_officer = user_roles.includes("JNZ_ROLE_Delivery_Officer") || is_system_manager;
+
+                    grid.update_docfield_property("rri_allocated_quantity", "read_only", is_ration_officer ? 0 : 1);
+                    grid.update_docfield_property("rri_delivered_quantity", "read_only", is_delivery_officer ? 0 : 1);
+                    grid.reset_grid();
+                }
+            });
+        } else {
+            grid.update_docfield_property("rri_allocated_quantity", "read_only", 1);
+            grid.update_docfield_property("rri_delivered_quantity", "read_only", 1);
+            grid.reset_grid();
+        }
     }
 
     _setStatusIndicator() {
@@ -148,3 +231,10 @@ class JNZRationRequestFieldHandler {
         }
     }
 }
+
+// تغییر تسک ۹ و ۱۰: هوک رندر گرید برای اطمینان از اعمال قفل ستون‌ها در طول فرم لایو
+frappe.ui.form.on('JNZ Ration Request Item CT', {
+    rreq_items_on_form_rendered(doc, cdt, cdn) {
+        cur_frm.trigger('manage_grid_columns_permissions');
+    }
+});
