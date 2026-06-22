@@ -1,7 +1,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import today, add_days, getdate
+from frappe.utils import today, add_days, getdate, now_datetime
 from frappe.utils.data import get_url_to_form
 import jdatetime
 
@@ -9,7 +9,6 @@ import jdatetime
 # Constants
 # ---------------------------------------------------------------------------
 DOCTYPE_FOOD_REQUEST     = "JNZ Food Request"
-DOCTYPE_PROJECT_SETTINGS = "JNZ Project Settings"
 
 
 class JNZFoodRequest(Document):
@@ -104,6 +103,8 @@ class JNZFoodRequest(Document):
         self._validate_dates()
         self._validate_positive_counts()
         self._validate_no_overlapping_requests()
+        # تسک ۱۳ و ۱۴: بررسی یکپارچه قفل زمانی روز جاری و فیلتر ۲ روز مهلت درخواست جدید
+        self._validate_datetime_restrictions()
 
     # ------------------------------------------------------------------
     # Whitelisted Methods for UI Interaction
@@ -116,7 +117,6 @@ class JNZFoodRequest(Document):
         old_state = old_doc.workflow_state if old_doc else None
         current_state = self.workflow_state
         
-        # سیستم فقط وقتی لاگ می‌اندازد که استیت ورک‌فلو در حال تغییر باشد
         is_workflow_action = old_state and (old_state != current_state)
         
         user_fullname = frappe.session.user_fullname or frappe.session.user
@@ -125,10 +125,9 @@ class JNZFoodRequest(Document):
         if user_roles:
             role_label = frappe.db.get_value("Role", user_roles[0], "role_name") or user_roles[0]
         else:
-            role_label = "مدیر سیستم" if "System Manager" in frappe.get_roles() else "کاربر"
+            role_label = "_(System Administrator)" if "Administrator" in frappe.get_roles() else "_(User)"
 
         for row in self.get("freq_days") or []:
-            # مقداردهی اولیه حافظه پنهان برای ردیف‌های تازه ساخته شده
             if row.frd_base_breakfast is None: row.frd_base_breakfast = row.frd_breakfast_count or 0
             if row.frd_base_lunch is None: row.frd_base_lunch = row.frd_lunch_count or 0
             if row.frd_base_dinner is None: row.frd_base_dinner = row.frd_dinner_count or 0
@@ -136,43 +135,39 @@ class JNZFoodRequest(Document):
             if is_workflow_action:
                 changes = []
                 
-                # مقایسه اعدادی که ثبت شده با اعدادی که در ابتدای این مرحله در حافظه پنهان بوده
                 old_b = int(row.frd_base_breakfast or 0)
                 new_b = int(row.frd_breakfast_count or 0)
-                if new_b != old_b:
-                    changes.append(f"صبحانه را از {old_b} به {new_b}")
+                if new_b != old_b: changes.append(f"صبحانه را از {old_b} به {new_b}")
 
                 old_l = int(row.frd_base_lunch or 0)
                 new_l = int(row.frd_lunch_count or 0)
-                if new_l != old_l:
-                    changes.append(f"ناهار را از {old_l} به {new_l}")
+                if new_l != old_l: changes.append(f"ناهار را از {old_l} به {new_l}")
 
                 old_d = int(row.frd_base_dinner or 0)
                 new_d = int(row.frd_dinner_count or 0)
-                if new_d != old_d:
-                    changes.append(f"شام را از {old_d} به {new_d}")
+                if new_d != old_d: changes.append(f"شام را از {old_d} به {new_d}")
 
-                # اگر در طول این مرحله تغییری انجام داده بودید، حالا لاگ می‌افتد
                 if changes:
                     meal_changes_text = " و ".join(changes)
                     audit_text = f"کاربر {user_fullname} با نقش {_(role_label)} مقدار {meal_changes_text} تغییر داد."
                     
                     row.frd_audit_text = audit_text
-                    row.frd_user_note = "" # پاک کردن یادداشت چون آمار عوض شده
+                    row.frd_user_note = ""
                 
-                # بروزرسانی حافظه پنهان با مقادیر جدید برای اینکه نفر بعدی در استیت جدید از این مقادیر شروع کند
                 row.frd_base_breakfast = new_b
                 row.frd_base_lunch = new_l
                 row.frd_base_dinner = new_d
                     
     @frappe.whitelist()
+    
     def get_calculated_end_date(self):
         if not self.freq_project or not self.freq_start_date:
             return None
 
+        # واکشی مستقیم فیلدها از روی داک‌تایپ پروژه
         settings = frappe.db.get_value(
-            DOCTYPE_PROJECT_SETTINGS,
-            {"projset_project": self.freq_project},
+            "JNZ Project",
+            self.freq_project,
             ["projset_auto_generate_end_date", "projset_request_period_days"],
             as_dict=True,
         )
@@ -183,7 +178,7 @@ class JNZFoodRequest(Document):
             return calculated_end
         
         return None
-
+    
     @frappe.whitelist()
     def sync_table_with_dates(self):
         """
@@ -202,7 +197,6 @@ class JNZFoodRequest(Document):
         l_default = self.default_lunch or 0
         d_default = self.default_dinner or 0
 
-        # تسک ۱۱ و ۱۲: حفظ فیلدهای ممیزی، یادداشت، حافظه پنهان و مقادیر سرو شده
         existing = {
             getdate(row.frd_day_date): {
                 "frd_breakfast_count": row.frd_breakfast_count or 0,
@@ -241,7 +235,6 @@ class JNZFoodRequest(Document):
                     "frd_base_dinner":     saved.get("frd_base_dinner"),
                 })
             else:
-                # تسک ۱۲: مقدار پیش‌فرض فیلد سرو شده دقیقاً برابر مقدار درخواستی اولیه قرار می‌گیرد
                 self.append("freq_days", {
                     "frd_day_date":        str(current),
                     "frd_breakfast_count": b_default,
@@ -268,9 +261,67 @@ class JNZFoodRequest(Document):
             row.frd_served_dinner = d_count
 
     # ------------------------------------------------------------------
-    # Validation
+    # Validation & Business Logic
     # ------------------------------------------------------------------
+    def _validate_datetime_restrictions(self):
+        """تسک ۱۳ و ۱۴: کنترل محدودیت زمانی ویرایش سطرها و زمان ثبت سند جدید"""
+        if "System Manager" in frappe.get_roles():
+            return
 
+        if not self.freq_project:
+            return
+
+        # واکشی مستقیم پارامترهای زمان‌بندی از خودِ پروژه
+        settings = frappe.db.get_value(
+            "JNZ Project",
+            self.freq_project,
+            ["projset_request_deadline_days", "projset_edit_start_time", "projset_edit_end_time"],
+            as_dict=True
+        )
+        if not settings:
+            return
+
+        current_date = getdate(today())
+        
+        # --- تسک ۱۴: قفل مهلت درخواست جدید (حداقل ۲ روز قبل از Start Date) ---
+        if self.freq_start_date:
+            deadline_days = settings.get("projset_request_deadline_days") or 2
+            min_allowed_start_date = add_days(current_date, deadline_days)
+            
+            if getdate(self.freq_start_date) < min_allowed_start_date:
+                shamsi_limit = jdatetime.date.fromgregorian(date=min_allowed_start_date).strftime("%Y/%m/%d")
+                frappe.throw(_("ثبت یا ویرایش درخواست برای این بازه مجاز نیست. بر اساس تنظیمات کارگاه، تاریخ شروع درخواست جدید نمی‌تواند زودتر از {0} باشد.").format(shamsi_limit))
+
+        # --- تسک ۱۳: محدودیت ساعت ویرایش آمار روز جاری و قفل روزهای گذشته ---
+        old_doc = self.get_doc_before_save()
+        if old_doc:
+            old_rows = {str(getdate(r.frd_day_date)): r for r in old_doc.get("freq_days") or []}
+            current_time_str = now_datetime().strftime("%H:%M:%S")
+
+            start_time = str(settings.get("projset_edit_start_time") or "08:00:00")
+            end_time = str(settings.get("projset_edit_end_time") or "11:00:00")
+
+            for row in self.get("freq_days") or []:
+                row_date_str = str(getdate(row.frd_day_date))
+                if row_date_str in old_rows:
+                    old_row = old_rows[row_date_str]
+                    
+                    is_modified = (
+                        int(row.frd_breakfast_count or 0) != int(old_row.frd_breakfast_count or 0) or
+                        int(row.frd_lunch_count or 0) != int(old_row.frd_lunch_count or 0) or
+                        int(row.frd_dinner_count or 0) != int(old_row.frd_dinner_count or 0)
+                    )
+
+                    if is_modified:
+                        row_date = getdate(row.frd_day_date)
+                        
+                        if row_date < current_date:
+                            frappe.throw(_("امکان ویرایش آمار روزهای گذشته وجود ندارد."))
+                        
+                        if row_date == current_date:
+                            if not (start_time <= current_time_str <= end_time):
+                                frappe.throw(_("ویرایش آمار غذای روز جاری خارج از بازه مجاز (ساعت {0} تا {1}) امکان‌پذیر نیست.").format(start_time[:5], end_time[:5]))
+                                
     def _validate_no_overlapping_requests(self):
         if not self.freq_project or not self.freq_start_date or not self.freq_end_date:
             return

@@ -8,14 +8,23 @@
   "proj_name",
   "user_define_code",
   "proj_rooms_count",
-  "meetings_count",
   "active",
   "col_break_main",
   "description",
+  "kitchen_tab",
   "section_break_qvre",
   "kitchen",
+  "meetings_count",
+  "tab_break_ljzl",
   "section_break_vxaa",
-  "members"
+  "members",
+  "project_setting_tab",
+  "projset_request_period_days",
+  "projset_request_deadline_days",
+  "projset_auto_generate_end_date",
+  "column_break_ltgy",
+  "projset_edit_start_time",
+  "projset_edit_end_time"
  ],
  "fields": [
   {
@@ -58,6 +67,33 @@
    "label": "Project Description"
   },
   {
+   "fieldname": "kitchen_tab",
+   "fieldtype": "Tab Break",
+   "label": "Kitchen"
+  },
+  {
+   "fieldname": "section_break_qvre",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "kitchen",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Kitchen",
+   "options": "JNZ Kitchen"
+  },
+  {
+   "default": "1",
+   "fieldname": "meetings_count",
+   "fieldtype": "Int",
+   "label": "Meetings Count"
+  },
+  {
+   "fieldname": "tab_break_ljzl",
+   "fieldtype": "Tab Break",
+   "label": "Members"
+  },
+  {
    "fieldname": "section_break_vxaa",
    "fieldtype": "Section Break"
   },
@@ -68,25 +104,51 @@
    "options": "JNZ Project Members CT"
   },
   {
-   "fieldname": "kitchen",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Kitchen",
-   "options": "JNZ Kitchen"
+   "fieldname": "project_setting_tab",
+   "fieldtype": "Tab Break",
+   "label": "Project Setting"
   },
   {
-   "fieldname": "section_break_qvre",
-   "fieldtype": "Section Break"
+   "default": "10",
+   "fieldname": "projset_request_period_days",
+   "fieldtype": "Int",
+   "label": "Request Period (Days)",
+   "reqd": 1
+  },
+  {
+   "default": "2",
+   "fieldname": "projset_request_deadline_days",
+   "fieldtype": "Int",
+   "label": "Request Deadline (Days)",
+   "reqd": 1
   },
   {
    "default": "1",
-   "fieldname": "meetings_count",
-   "fieldtype": "Int",
-   "label": "Meetings Count"
+   "fieldname": "projset_auto_generate_end_date",
+   "fieldtype": "Check",
+   "label": "Auto-Generate End Date"
+  },
+  {
+   "default": "08:00:00",
+   "fieldname": "projset_edit_start_time",
+   "fieldtype": "Time",
+   "label": "Edition Start Time",
+   "reqd": 1
+  },
+  {
+   "default": "11:00:00",
+   "fieldname": "projset_edit_end_time",
+   "fieldtype": "Time",
+   "label": "Edition End Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ltgy",
+   "fieldtype": "Column Break"
   }
  ],
  "links": [],
- "modified": "2026-06-21 16:34:23.169783",
+ "modified": "2026-06-22 16:15:50.677523",
  "modified_by": "Administrator",
  "module": "JNZ",
  "name": "JNZ Project",

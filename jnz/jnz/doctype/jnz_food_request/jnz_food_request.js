@@ -228,7 +228,7 @@ class JNZFoodRequestDateHandler {
                     this.frm.set_value('freq_end_date', r.message);
                     frappe.show_alert({ message: __("End Date derived from Project Settings."), indicator: "blue" });
                 } else {
-                    frappe.msgprint(__("Could not calculate End Date. Please check JNZ Project Settings."));
+                    frappe.msgprint(__("Could not calculate End Date. Please check Project Settings."));
                 }
             }
         });
