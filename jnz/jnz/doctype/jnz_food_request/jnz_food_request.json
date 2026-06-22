@@ -67,7 +67,8 @@
    "fieldname": "freq_days",
    "fieldtype": "Table",
    "label": "Daily Counts",
-   "options": "JNZ Food Request Day CT"
+   "options": "JNZ Food Request Day CT",
+   "in_grid_edit": 1
   },
   {
    "fieldname": "connections_tab",

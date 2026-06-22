@@ -1,59 +1,128 @@
 {
-  "actions": [],
-  "doctype": "DocType",
-  "name": "JNZ Food Request Day CT",
-  "module": "JNZ",
-  "naming_rule": "Expression",
-  "autoname": "FRD-.#####",
-  "istable": 1,
-  "editable_grid": 1,
-  "engine": "InnoDB",
-  "grid_page_length": 50,
-  "index_web_pages_for_search": 1,
-  "rows_threshold_for_grid_search": 20,
-  "row_format": "Dynamic",
-  "sort_field": "frd_day_date",
-  "sort_order": "ASC",
-  "track_changes": 0,
-  "links": [],
-  "states": [],
-  "field_order": [
-    "frd_day_date",
-    "frd_breakfast_count",
-    "frd_lunch_count",
-    "frd_dinner_count"
-  ],
-  "fields": [
-    {
-      "fieldname": "frd_day_date",
-      "fieldtype": "Date",
-      "label": "Date",
-      "reqd": 1,
-      "read_only": 1,
-      "no_copy": 1,
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "frd_breakfast_count",
-      "fieldtype": "Int",
-      "label": "Breakfast Count",
-      "default": "0",
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "frd_lunch_count",
-      "fieldtype": "Int",
-      "label": "Lunch Count",
-      "default": "0",
-      "in_list_view": 1
-    },
-    {
-      "fieldname": "frd_dinner_count",
-      "fieldtype": "Int",
-      "label": "Dinner Count",
-      "default": "0",
-      "in_list_view": 1
-    }
-  ],
-  "permissions": []
+ "actions": [],
+ "autoname": "FRD-.#####",
+ "creation": "2026-06-22 13:47:34.080427",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "frd_day_date",
+  "frd_breakfast_count",
+  "frd_lunch_count",
+  "frd_dinner_count",
+  "frd_audit_text",
+  "frd_user_note",
+  "frd_served_breakfast",
+  "frd_served_lunch",
+  "frd_served_dinner",
+  "frd_base_breakfast",
+  "frd_base_lunch",
+  "frd_base_dinner"
+ ],
+ "fields": [
+  {
+   "fieldname": "frd_day_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "no_copy": 1,
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "frd_breakfast_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Breakfast Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "frd_served_breakfast",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Served Breakfast"
+  },
+  {
+   "default": "0",
+   "fieldname": "frd_lunch_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Lunch Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "frd_served_lunch",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Served Lunch"
+  },
+  {
+   "default": "0",
+   "fieldname": "frd_dinner_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Dinner Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "frd_served_dinner",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Served Dinner"
+  },
+  {
+   "columns": 4,
+   "fieldname": "frd_audit_text",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Last Audit Trail",
+   "read_only": 1
+  },
+  {
+   "columns": 3,
+   "fieldname": "frd_user_note",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Handover Note",
+   "placeholder": "Note for the next stage..."
+  },
+  {
+   "default": "0",
+   "fieldname": "frd_base_breakfast",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Base Breakfast"
+  },
+  {
+   "default": "0",
+   "fieldname": "frd_base_lunch",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Base Lunch"
+  },
+  {
+   "default": "0",
+   "fieldname": "frd_base_dinner",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Base Dinner"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-06-22 15:08:19.555754",
+ "modified_by": "Administrator",
+ "module": "JNZ",
+ "name": "JNZ Food Request Day CT",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "frd_day_date",
+ "sort_order": "ASC",
+ "states": []
 }

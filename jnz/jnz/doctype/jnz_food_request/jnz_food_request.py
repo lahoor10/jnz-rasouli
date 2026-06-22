@@ -45,8 +45,6 @@ class JNZFoodRequest(Document):
             "Pending HR Approval": "JNZ_ROLE__HR",
             "Pending CEO Office Approval": "JNZ_ROLE__CEO_Office",
             "Pending CEO Approval": "JNZ_ROLE_CEO",
-            # اگر می‌خواهی در حالت Approved یا Rejected هم به کسی (مثلاً سیستم منیجر) 
-            # ایمیل برود، باید نقش‌های آن‌ها را هم اینجا اضافه کنی.
         }
 
         if current_state not in state_role_map:
@@ -99,6 +97,8 @@ class JNZFoodRequest(Document):
     def before_save(self):
         if not self.freq_request_date:
             self.freq_request_date = today()
+        # تسک ۱۱: اجرای سیستم ممیزی مقایسه خروجی استیت با ورودی استیت
+        self._audit_food_days_changes()
 
     def validate(self):
         self._validate_dates()
@@ -108,7 +108,63 @@ class JNZFoodRequest(Document):
     # ------------------------------------------------------------------
     # Whitelisted Methods for UI Interaction
     # ------------------------------------------------------------------
+    def _audit_food_days_changes(self):
+        """سیستم ممیزی فقط بر اساس اکشن ورک‌فلو (مقایسه حافظه پنهان مرحله با خروجی نهایی)"""
+        if not self.name or not self.freq_project: return
+        
+        old_doc = self.get_doc_before_save()
+        old_state = old_doc.workflow_state if old_doc else None
+        current_state = self.workflow_state
+        
+        # سیستم فقط وقتی لاگ می‌اندازد که استیت ورک‌فلو در حال تغییر باشد
+        is_workflow_action = old_state and (old_state != current_state)
+        
+        user_fullname = frappe.session.user_fullname or frappe.session.user
+        user_roles = frappe.get_all("JNZ Project Members CT", filters={"parent": self.freq_project, "member": frappe.session.user}, pluck="role")
+        
+        if user_roles:
+            role_label = frappe.db.get_value("Role", user_roles[0], "role_name") or user_roles[0]
+        else:
+            role_label = "مدیر سیستم" if "System Manager" in frappe.get_roles() else "کاربر"
 
+        for row in self.get("freq_days") or []:
+            # مقداردهی اولیه حافظه پنهان برای ردیف‌های تازه ساخته شده
+            if row.frd_base_breakfast is None: row.frd_base_breakfast = row.frd_breakfast_count or 0
+            if row.frd_base_lunch is None: row.frd_base_lunch = row.frd_lunch_count or 0
+            if row.frd_base_dinner is None: row.frd_base_dinner = row.frd_dinner_count or 0
+
+            if is_workflow_action:
+                changes = []
+                
+                # مقایسه اعدادی که ثبت شده با اعدادی که در ابتدای این مرحله در حافظه پنهان بوده
+                old_b = int(row.frd_base_breakfast or 0)
+                new_b = int(row.frd_breakfast_count or 0)
+                if new_b != old_b:
+                    changes.append(f"صبحانه را از {old_b} به {new_b}")
+
+                old_l = int(row.frd_base_lunch or 0)
+                new_l = int(row.frd_lunch_count or 0)
+                if new_l != old_l:
+                    changes.append(f"ناهار را از {old_l} به {new_l}")
+
+                old_d = int(row.frd_base_dinner or 0)
+                new_d = int(row.frd_dinner_count or 0)
+                if new_d != old_d:
+                    changes.append(f"شام را از {old_d} به {new_d}")
+
+                # اگر در طول این مرحله تغییری انجام داده بودید، حالا لاگ می‌افتد
+                if changes:
+                    meal_changes_text = " و ".join(changes)
+                    audit_text = f"کاربر {user_fullname} با نقش {_(role_label)} مقدار {meal_changes_text} تغییر داد."
+                    
+                    row.frd_audit_text = audit_text
+                    row.frd_user_note = "" # پاک کردن یادداشت چون آمار عوض شده
+                
+                # بروزرسانی حافظه پنهان با مقادیر جدید برای اینکه نفر بعدی در استیت جدید از این مقادیر شروع کند
+                row.frd_base_breakfast = new_b
+                row.frd_base_lunch = new_l
+                row.frd_base_dinner = new_d
+                    
     @frappe.whitelist()
     def get_calculated_end_date(self):
         if not self.freq_project or not self.freq_start_date:
@@ -146,11 +202,20 @@ class JNZFoodRequest(Document):
         l_default = self.default_lunch or 0
         d_default = self.default_dinner or 0
 
+        # تسک ۱۱ و ۱۲: حفظ فیلدهای ممیزی، یادداشت، حافظه پنهان و مقادیر سرو شده
         existing = {
             getdate(row.frd_day_date): {
                 "frd_breakfast_count": row.frd_breakfast_count or 0,
+                "frd_served_breakfast": row.frd_served_breakfast or 0,
                 "frd_lunch_count":     row.frd_lunch_count     or 0,
+                "frd_served_lunch":     row.frd_served_lunch     or 0,
                 "frd_dinner_count":    row.frd_dinner_count    or 0,
+                "frd_served_dinner":    row.frd_served_dinner    or 0,
+                "frd_audit_text":      row.frd_audit_text,
+                "frd_user_note":       row.frd_user_note,
+                "frd_base_breakfast":  row.frd_base_breakfast,
+                "frd_base_lunch":      row.frd_base_lunch,
+                "frd_base_dinner":     row.frd_base_dinner,
             }
             for row in (self.freq_days or []) if row.frd_day_date
         }
@@ -164,15 +229,27 @@ class JNZFoodRequest(Document):
                 self.append("freq_days", {
                     "frd_day_date":        str(current),
                     "frd_breakfast_count": saved.get("frd_breakfast_count", 0),
+                    "frd_served_breakfast": saved.get("frd_served_breakfast", 0),
                     "frd_lunch_count":     saved.get("frd_lunch_count",     0),
+                    "frd_served_lunch":     saved.get("frd_served_lunch",     0),
                     "frd_dinner_count":    saved.get("frd_dinner_count",    0),
+                    "frd_served_dinner":    saved.get("frd_served_dinner",    0),
+                    "frd_audit_text":      saved.get("frd_audit_text"),
+                    "frd_user_note":       saved.get("frd_user_note"),
+                    "frd_base_breakfast":  saved.get("frd_base_breakfast"),
+                    "frd_base_lunch":      saved.get("frd_base_lunch"),
+                    "frd_base_dinner":     saved.get("frd_base_dinner"),
                 })
             else:
+                # تسک ۱۲: مقدار پیش‌فرض فیلد سرو شده دقیقاً برابر مقدار درخواستی اولیه قرار می‌گیرد
                 self.append("freq_days", {
                     "frd_day_date":        str(current),
                     "frd_breakfast_count": b_default,
+                    "frd_served_breakfast": b_default,
                     "frd_lunch_count":     l_default,
+                    "frd_served_lunch":     l_default,
                     "frd_dinner_count":    d_default,
+                    "frd_served_dinner":    d_default,
                 })
             current = add_days(current, 1)
 
@@ -184,8 +261,11 @@ class JNZFoodRequest(Document):
 
         for row in self.freq_days or []:
             row.frd_breakfast_count = b_count
+            row.frd_served_breakfast = b_count
             row.frd_lunch_count = l_count
+            row.frd_served_lunch = l_count
             row.frd_dinner_count = d_count
+            row.frd_served_dinner = d_count
 
     # ------------------------------------------------------------------
     # Validation

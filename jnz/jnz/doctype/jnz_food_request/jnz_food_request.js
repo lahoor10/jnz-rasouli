@@ -4,6 +4,27 @@
 const DOCTYPE = "JNZ Food Request";
 
 frappe.ui.form.on(DOCTYPE, {
+    // خلاقیت دولوپر: تبدیل کل لایوت فرم به عرض ۱۰۰٪ صفحه جهت جلوگیری از فشرده شدن جدول عریض
+    onload(frm) {
+        $(".form-container").css({
+            "max-width": "100%",
+            "padding-left": "30px",
+            "padding-right": "30px"
+        });
+        $(".layout-main-section").css("max-width", "100%");
+    },
+
+    // تزریق استایل‌های گرافیکی (Formatter) برای زیباسازی فیلد ممیزی در جدول
+    setup(frm) {
+        let audit_df = frappe.meta.get_docfield("JNZ Food Request Day CT", "frd_audit_text", frm.docname);
+        if (audit_df) {
+            audit_df.formatter = function(value) {
+                if (!value) return "";
+                return `<div style="max-height: 65px; overflow-y: auto; font-size: 11px; line-height: 1.6; color: #2c5282; background-color: #ebf8ff; border: 1px solid #bee3f8; padding: 4px 6px; border-radius: 4px; white-space: pre-wrap; direction: rtl; text-align: right;">${value}</div>`;
+            };
+        }
+    },
+
     refresh(frm) {
         new JNZFoodRequestFormController(frm).init();
         // مخفی کردن دکمه‌های غیرمجاز ورک‌فلو
@@ -71,6 +92,23 @@ frappe.ui.form.on(DOCTYPE, {
 });
 
 
+// ارث‌بری خودکار آمار سرو شده به محض تغییر تعداد دستی توسط کاربر
+frappe.ui.form.on("JNZ Food Request Day CT", {
+    frd_breakfast_count: function(frm, cdt, cdn) {
+        let row = frappe.get_doc(cdt, cdn);
+        frappe.model.set_value(cdt, cdn, "frd_served_breakfast", row.frd_breakfast_count || 0);
+    },
+    frd_lunch_count: function(frm, cdt, cdn) {
+        let row = frappe.get_doc(cdt, cdn);
+        frappe.model.set_value(cdt, cdn, "frd_served_lunch", row.frd_lunch_count || 0);
+    },
+    frd_dinner_count: function(frm, cdt, cdn) {
+        let row = frappe.get_doc(cdt, cdn);
+        frappe.model.set_value(cdt, cdn, "frd_served_dinner", row.frd_dinner_count || 0);
+    }
+});
+
+
 // ---------------------------------------------------------------------------
 // FormController — Grid adjustments & Bulk Defaults Action
 // ---------------------------------------------------------------------------
@@ -92,6 +130,7 @@ class JNZFoodRequestFormController {
         const grid = this.frm.fields_dict["freq_days"]?.grid;
         if (!grid) return;
         grid.update_docfield_property("frd_day_date", "read_only", 1);
+        grid.update_docfield_property("frd_audit_text", "read_only", 1);
         grid.reset_grid();
     }
 
@@ -128,8 +167,12 @@ class JNZFoodRequestFormController {
     _apply_bulk_counts(b, l, d) {
         (this.frm.doc.freq_days || []).forEach(row => {
             frappe.model.set_value(row.doctype, row.name, "frd_breakfast_count", b);
+            frappe.model.set_value(row.doctype, row.name, "frd_served_breakfast", b);
             frappe.model.set_value(row.doctype, row.name, "frd_lunch_count", l);
+            frappe.model.set_value(row.doctype, row.name, "frd_served_lunch", l);
             frappe.model.set_value(row.doctype, row.name, "frd_dinner_count", d);
+            frappe.model.set_value(row.doctype, row.name, "frd_served_dinner", d);
+            frappe.model.set_value(row.doctype, row.name, "frd_user_note", "");
         });
         this.frm.refresh_field("freq_days");
         frappe.show_alert({ message: __("Default counts successfully applied to all rows."), indicator: "green" });
@@ -155,11 +198,9 @@ class JNZFoodRequestDateHandler {
     }
 
     on_start_date_change() {
-        // تغییر تاریخ شروع دیگر به صورت خودکار تاریخ پایان را تحریک نمی‌کند.
         const doc = this.frm.doc;
         if (doc.freq_start_date && doc.freq_end_date) {
             if (frappe.datetime.str_to_obj(doc.freq_end_date) < frappe.datetime.str_to_obj(doc.freq_start_date)) {
-                // اگر شروع جدید از پایان جلو زد، پایان را پاک می‌کنیم تا یوزر دکمه یا تاریخ دستی را بزند
                 this.frm.set_value("freq_end_date", "");
             } else {
                 this._process_table_sync();
@@ -203,7 +244,6 @@ class JNZFoodRequestDateHandler {
             return;
         }
 
-        // بررسی تفاوت بازه نسبت به قبل جهت جلوگیری از رندرهای تکراری و مزاحم
         if (doc.freq_start_date !== this.frm.__old_start_date || doc.freq_end_date !== this.frm.__old_end_date) {
             if (!doc.freq_days || doc.freq_days.length === 0) {
                 this.build_table_via_server();
