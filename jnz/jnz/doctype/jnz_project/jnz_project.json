@@ -14,11 +14,11 @@
   "kitchen_tab",
   "section_break_qvre",
   "kitchen",
-  "meetings_count",
   "tab_break_ljzl",
   "section_break_vxaa",
   "members",
   "project_setting_tab",
+  "meetings_count",
   "projset_request_period_days",
   "projset_request_deadline_days",
   "projset_auto_generate_end_date",
@@ -86,7 +86,8 @@
    "default": "1",
    "fieldname": "meetings_count",
    "fieldtype": "Int",
-   "label": "Meetings Count"
+   "label": "Meetings Count",
+   "reqd": 1
   },
   {
    "fieldname": "tab_break_ljzl",
@@ -148,7 +149,7 @@
   }
  ],
  "links": [],
- "modified": "2026-06-22 16:15:50.677523",
+ "modified": "2026-06-22 16:17:50.892790",
  "modified_by": "Administrator",
  "module": "JNZ",
  "name": "JNZ Project",

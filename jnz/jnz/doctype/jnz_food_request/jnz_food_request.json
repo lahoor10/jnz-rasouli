@@ -22,7 +22,8 @@
   "sec_days",
   "update_tab",
   "freq_days",
-  "connections_tab"
+  "connections_tab",
+  "amended_from"
  ],
  "fields": [
   {
@@ -67,8 +68,7 @@
    "fieldname": "freq_days",
    "fieldtype": "Table",
    "label": "Daily Counts",
-   "options": "JNZ Food Request Day CT",
-   "in_grid_edit": 1
+   "options": "JNZ Food Request Day CT"
   },
   {
    "fieldname": "connections_tab",
@@ -127,10 +127,21 @@
   {
    "fieldname": "section_break_02b8",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "JNZ Food Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-06-18 12:35:40.930530",
+ "modified": "2026-06-22 17:04:37.565526",
  "modified_by": "Administrator",
  "module": "JNZ",
  "name": "JNZ Food Request",

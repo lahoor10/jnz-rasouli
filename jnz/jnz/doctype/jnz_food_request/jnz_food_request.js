@@ -4,15 +4,6 @@
 const DOCTYPE = "JNZ Food Request";
 
 frappe.ui.form.on(DOCTYPE, {
-    // خلاقیت دولوپر: تبدیل کل لایوت فرم به عرض ۱۰۰٪ صفحه جهت جلوگیری از فشرده شدن جدول عریض
-    onload(frm) {
-        $(".form-container").css({
-            "max-width": "100%",
-            "padding-left": "30px",
-            "padding-right": "30px"
-        });
-        $(".layout-main-section").css("max-width", "100%");
-    },
 
     // تزریق استایل‌های گرافیکی (Formatter) برای زیباسازی فیلد ممیزی در جدول
     setup(frm) {
@@ -27,6 +18,31 @@ frappe.ui.form.on(DOCTYPE, {
 
     refresh(frm) {
         new JNZFoodRequestFormController(frm).init();
+        
+        // تسک ۱۳: ساخت دکمه اختصاصی آپدیت برای سرپرست کارگاه پس از تایید نهایی
+        // تسک ۱۳: ساخت دکمه اختصاصی آپدیت با استفاده از API مستقیم جهت دور زدن باگ‌های رابط کاربری ورک‌فلو
+        if (frm.doc.docstatus === 1 && frappe.user_roles.includes("JNZ_ROLE_Site_Supervisor")) {
+            frm.add_custom_button(__('ثبت تغییرات آمار امروز'), function() {
+                
+                frappe.call({
+                    method: "frappe.desk.form.save.savedocs",
+                    args: {
+                        doc: JSON.stringify(frm.doc),
+                        action: "Update"
+                    },
+                    freeze: true,
+                    freeze_message: __('در حال ثبت آمار مازاد و ممیزی...'),
+                    callback: function(r) {
+                        if(!r.exc) {
+                            frappe.show_alert({message: __('تغییرات آمار امروز با موفقیت ثبت شد.'), indicator: 'green'});
+                            frm.reload_doc(); // رفرش نرمِ صفحه بدون پرت شدن به بیرون
+                        }
+                    }
+                });
+
+            }).addClass('btn-primary text-white');
+        }
+
         // مخفی کردن دکمه‌های غیرمجاز ورک‌فلو
         if (!frm.is_new() && frm.doc.workflow_state) {
             
@@ -92,19 +108,41 @@ frappe.ui.form.on(DOCTYPE, {
 });
 
 
+// هندلر هوشمند برای کنترل تغییرات سلول‌های جدول و جلوگیری از خطای کاربر
+function handle_count_change(frm, cdt, cdn, fieldname, served_field, base_field) {
+    let row = frappe.get_doc(cdt, cdn);
+    
+    // کنترل‌های زمان Submit بودن سند (فقط امروز و فقط افزایش)
+    if (frm.doc.docstatus === 1) {
+        let today = frappe.datetime.get_today();
+        
+        if (row.frd_day_date !== today) {
+            frappe.msgprint({ title: __('خطا'), indicator: 'red', message: __('پس از تایید نهایی، شما فقط مجاز به ویرایش آمار "امروز" هستید.') });
+            frappe.model.set_value(cdt, cdn, fieldname, row[base_field] || 0); // برگرداندن به عدد قبلی
+            return;
+        }
+        
+        if ((row[fieldname] || 0) < (row[base_field] || 0)) {
+            frappe.msgprint({ title: __('خطا'), indicator: 'red', message: __('کاهش آمار پس از تایید نهایی مجاز نیست. فقط می‌توانید مازاد ثبت کنید.') });
+            frappe.model.set_value(cdt, cdn, fieldname, row[base_field] || 0); // برگرداندن به عدد قبلی
+            return;
+        }
+    }
+
+    // تسک ۱۲: کپی آمار به عنوان مقدار سرو شده
+    frappe.model.set_value(cdt, cdn, served_field, row[fieldname] || 0);
+}
+
 // ارث‌بری خودکار آمار سرو شده به محض تغییر تعداد دستی توسط کاربر
 frappe.ui.form.on("JNZ Food Request Day CT", {
     frd_breakfast_count: function(frm, cdt, cdn) {
-        let row = frappe.get_doc(cdt, cdn);
-        frappe.model.set_value(cdt, cdn, "frd_served_breakfast", row.frd_breakfast_count || 0);
+        handle_count_change(frm, cdt, cdn, "frd_breakfast_count", "frd_served_breakfast", "frd_base_breakfast");
     },
     frd_lunch_count: function(frm, cdt, cdn) {
-        let row = frappe.get_doc(cdt, cdn);
-        frappe.model.set_value(cdt, cdn, "frd_served_lunch", row.frd_lunch_count || 0);
+        handle_count_change(frm, cdt, cdn, "frd_lunch_count", "frd_served_lunch", "frd_base_lunch");
     },
     frd_dinner_count: function(frm, cdt, cdn) {
-        let row = frappe.get_doc(cdt, cdn);
-        frappe.model.set_value(cdt, cdn, "frd_served_dinner", row.frd_dinner_count || 0);
+        handle_count_change(frm, cdt, cdn, "frd_dinner_count", "frd_served_dinner", "frd_base_dinner");
     }
 });
 
