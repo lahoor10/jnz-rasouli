@@ -1,0 +1,108 @@
+{
+    "name": "JNZ Civil Service Request Workflow",
+    "doctype": "Workflow",
+    "workflow_name": "JNZ Civil Service Request Workflow",
+    "document_type": "JNZ Civil Service Request",
+    "is_active": 1,
+    "override_status": 1,
+    "workflow_state_field": "workflow_state",
+    "states": [
+        {
+            "state": "Draft",
+            "doc_status": "0",
+            "allow_edit": "JNZ_ROLE_Executive_Expert"
+        },
+        {
+            "state": "Pending Project Tech Approval",
+            "doc_status": "0",
+            "allow_edit": "JNZ_ROLE_Project_Technical_Office"
+        },
+        {
+            "state": "Pending Site Supervisor Approval",
+            "doc_status": "0",
+            "allow_edit": "JNZ_ROLE_Site_Supervisor"
+        },
+        {
+            "state": "Pending Dept Manager Approval",
+            "doc_status": "0",
+            "allow_edit": "JNZ_ROLE_Department_Manager"
+        },
+        {
+            "state": "Pending HQ Tech Approval",
+            "doc_status": "0",
+            "allow_edit": "JNZ_ROLE_HQ_Technical_Office"
+        },
+        {
+            "state": "Approved for Procurement",
+            "doc_status": "0",
+            "allow_edit": "System Manager"
+        },
+        {
+            "state": "Rejected",
+            "doc_status": "0",
+            "allow_edit": "JNZ_ROLE_Executive_Expert"
+        }
+    ],
+    "transitions": [
+        {
+            "state": "Draft",
+            "action": "Submit",
+            "next_state": "Pending Project Tech Approval",
+            "allowed": "JNZ_ROLE_Executive_Expert"
+        },
+        {
+            "state": "Pending Project Tech Approval",
+            "action": "Approve",
+            "next_state": "Pending Site Supervisor Approval",
+            "allowed": "JNZ_ROLE_Project_Technical_Office"
+        },
+        {
+            "state": "Pending Project Tech Approval",
+            "action": "Reject",
+            "next_state": "Rejected",
+            "allowed": "JNZ_ROLE_Project_Technical_Office"
+        },
+        {
+            "state": "Pending Site Supervisor Approval",
+            "action": "Approve",
+            "next_state": "Pending Dept Manager Approval",
+            "allowed": "JNZ_ROLE_Site_Supervisor"
+        },
+        {
+            "state": "Pending Site Supervisor Approval",
+            "action": "Reject",
+            "next_state": "Rejected",
+            "allowed": "JNZ_ROLE_Site_Supervisor"
+        },
+        {
+            "state": "Pending Dept Manager Approval",
+            "action": "Approve",
+            "next_state": "Pending HQ Tech Approval",
+            "allowed": "JNZ_ROLE_Department_Manager"
+        },
+        {
+            "state": "Pending Dept Manager Approval",
+            "action": "Reject",
+            "next_state": "Rejected",
+            "allowed": "JNZ_ROLE_Department_Manager"
+        },
+        {
+            "state": "Pending HQ Tech Approval",
+            "action": "Approve",
+            "next_state": "Approved for Procurement",
+            "allowed": "JNZ_ROLE_HQ_Technical_Office"
+        },
+        {
+            "state": "Pending HQ Tech Approval",
+            "action": "Reject",
+            "next_state": "Rejected",
+            "allowed": "JNZ_ROLE_HQ_Technical_Office"
+        },
+        {
+            "state": "Rejected",
+            "action": "Resubmit",
+            "next_state": "Pending Project Tech Approval",
+            "allowed": "JNZ_ROLE_Executive_Expert"
+        }
+    ]
+}

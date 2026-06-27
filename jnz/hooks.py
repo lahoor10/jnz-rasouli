@@ -36,6 +36,10 @@ after_migrate = [
 fixtures = [
 	{"doctype": "Desktop Icon", "filters": [["label", "=", "JNZ"]]},
 #	{"doctype": ""},
+    {
+        "dt": "Workflow",
+        "filters": [["name", "=", "JNZ Civil Service Request Workflow"]]
+    },
 ]
 
 # ---------------------------------------------------------------------------
@@ -62,5 +66,16 @@ doc_events = {
     },
     "JNZ Food Request": {
         "validate": "jnz.permissions.check_project_workflow_permission"
-    }
+    },
+    # "JNZ Contractor Warning": {
+    #     # اجرای اعتبارسنجی قبل از تایید ورک‌فلو
+    #     # "before_workflow_action": "jnz.scripts.warning_logic.check_secretariat_fields",
+    #     "validate": "jnz.scripts.warning_logic.check_secretariat_fields",
+    #     # اجرای اطلاع‌رسانی خودکار بعد از تایید نهایی و سابمیت شدن سند
+    #     "on_submit": "jnz.scripts.warning_logic.notify_parties"
+    # }
+}
+
+doctype_js = {
+    "JNZ Contractor Warning": "public/js/jnz_contractor_warning.js"
 }

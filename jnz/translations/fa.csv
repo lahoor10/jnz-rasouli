@@ -185,6 +185,26 @@ JNZ_ROLE_CEO,مدیرعامل
 JNZ_ROLE_Site_Supervisor,سرپرست کارگاه
 JNZ_ROLE__Project_Manager,مدیر پروژه
 JNZ_ROLE__HR,منابع انسانی
+JNZ_ROLE_Admin_Finance_Deputy,معاونت اداری و مالی
+JNZ_ROLE_Warehouse_Expert,کارشناس انبار
+JNZ_ROLE_Unit_Head,مسئول واحد
+JNZ_ROLE_Unit_Expert,کارشناس واحد
+JNZ_ROLE_Procurement_Officer,کارپرداز
+JNZ_ROLE_Commission,کمیسیون
+JNZ_ROLE_QC_Manager,مسئول کنترل کیفی
+JNZ_ROLE_Tender_Waiver_Commission,کمیسیون ترک تشریفات
+JNZ_ROLE_Department_Manager,مدیر بخش
+JNZ_ROLE_HQ_Technical_Office,دفتر فنی ستاد
+JNZ_ROLE_Project_Technical_Office,دفتر فنی پروژه
+JNZ_ROLE_Executive_Expert,کارشناس اجرایی
+JNZ_ROLE_Inquiry_Clerk,متصدی استعلام
+JNZ_ROLE_Transactions_Commission,کمیسیون معاملات
+JNZ_ROLE_Secretariat,دبیرخانه
+JNZ_ROLE_Technical_Office_Manager,مدیر دفتر فنی
+JNZ_ROLE_Auditor,حسابرسی
+JNZ_ROLE_Legal_Department,حقوقی
+JNZ_ROLE_Technical_Engineering_Deputy,معاون فنی و مهندسی
+JNZ_ROLE_Notifier,اخطار دهنده
 System Manager,مدیر سیستم
 All,همه
 Open,باز
@@ -256,3 +276,31 @@ You do not have the required role to perform the action {0} in project {1}!,شم
 "Served Dinner","شام سرو شده"
 "System Administrator","مدیر سیستم"
 "User","کاربر"
+"For postal dispatch, entering the 'Postal Tracking Number' is mandatory.",برای ارسال پستی، ثبت 'کد رهگیری پستی' الزامی است.
+"For automation dispatch, entering the 'Automation Letter Number' is mandatory.",برای ارسال در اتوماسیون، ثبت 'شماره نامه اتوماسیون' الزامی است.
+"New warning issued to contractor: {0}",اخطار جدید به پیمانکار ابلاغ شد: {0}
+"A warning for contractor {0} in project {1} has been issued and dispatched by the Secretariat.",یک اخطار برای پیمانکار {0} در پروژه {1} توسط دبیرخانه صادر و ابلاغ شد.
+"Warning Notification - Project {0}",ابلاغیه اخطار - پروژه {0}
+"Dear Contractor,<br><br>Following contract {0}, the following warning is hereby issued to you:<br><br>{1}<br><br>Best regards.","پیمانکار گرامی،<br><br>پیرو قرارداد {0}، بدینوسیله اخطار زیر به شما ابلاغ می‌گردد:<br><br>{1}<br><br>با تشکر."
+"Complete Secretariat Information",تکمیل اطلاعات دبیرخانه
+Submit and Approve,ثبت و تایید
+Pending Technical Office Approval,در انتظار تایید دفتر فنی
+Pending Engineering Deputy Approval,در انتظار تایید معاون فنی و مهندسی
+Pending Legal Approval,در انتظار تایید حقوقی
+Pending Official Dispatch,در انتظار ارسال رسمی (پستی)
+Pending Internal Dispatch,در انتظار ارسال داخلی (اتوماسیون)
+Completed,تکمیل شده
+Send for Approval,ارسال برای تایید
+Approve,تایید
+Reject,رد
+Reject By Deputy,رد توسط معاونت
+Approve - Needs Official,تایید - نیاز به ابلاغ رسمی
+Approve - Internal Only,تایید - فقط ابلاغ داخلی
+Approve Legal,تایید حقوقی
+Reject Legal to Internal,رد حقوقی و ارجاع به ارسال داخلی
+Issue and Post Letter,صدور و ارسال پستی نامه
+Send via Automation,ارسال از طریق اتوماسیون
+JNZ Contractor Warning Workflow,گردش کار اخطار پیمانکار
+JNZ Contractor Warning,اخطار پیمانکار
+JNZ Contractor,پیمانکار
+JNZ Contract,قرارداد
