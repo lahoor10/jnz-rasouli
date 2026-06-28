@@ -36,10 +36,6 @@ after_migrate = [
 fixtures = [
 	{"doctype": "Desktop Icon", "filters": [["label", "=", "JNZ"]]},
 #	{"doctype": ""},
-    {
-        "dt": "Workflow",
-        "filters": [["name", "=", "JNZ Civil Service Request Workflow"]]
-    },
 ]
 
 # ---------------------------------------------------------------------------
